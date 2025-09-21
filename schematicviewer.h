@@ -1,0 +1,28 @@
+#ifndef SCHEMATICVIEWER_H
+#define SCHEMATICVIEWER_H
+
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QMimeData>
+#include <QDebug>
+
+class SchematicViewer : public QGraphicsView {
+    Q_OBJECT
+
+public:
+    explicit SchematicViewer(QWidget *parent = nullptr);
+    void openFile(const QString &filePath,QPointF dropPos);
+
+protected:
+    void dragEnterEvent(QDragEnterEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
+    void wheelEvent(QWheelEvent *event) override;
+    void drawBackground(QPainter *painter, const QRectF &rect) override; // 👈 grid
+
+private:
+    QGraphicsScene *scene;
+};
+
+#endif // SCHEMATICVIEWER_H
