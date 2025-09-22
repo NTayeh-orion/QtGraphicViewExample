@@ -8,11 +8,23 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     schematicViewer = new SchematicViewer(this);
-    setCentralWidget(schematicViewer);
+    ui->graphicViewFrame->layout()->addWidget(schematicViewer);
+    ui->lineEdit->setPlaceholderText(" Search files... ");
 
-    createMenus();
-    resize(800, 600);
+    // resize(800, 600);
     setWindowTitle("Schematic Viewer");
+
+    QPixmap logoIcon(":/imgs/imgsAndFiles/shortcut.png");
+    QPixmap nextIcon(":/imgs/imgsAndFiles/next.png");
+    QPixmap pouseIcon(":/imgs/imgsAndFiles/pause.png");
+    QPixmap stopIcon(":/imgs/imgsAndFiles/pause-button.png");
+    QPixmap searchIcon(":/imgs/imgsAndFiles/loupe.png");
+
+    ui->topLogoIconeLabel->setPixmap(logoIcon.scaled(40,40,Qt::KeepAspectRatio));
+    ui->nextLabel->setPixmap(nextIcon.scaled(30,30,Qt::KeepAspectRatio));
+    ui->pouseLabel->setPixmap(pouseIcon.scaled(30,30,Qt::KeepAspectRatio));
+    ui->stopLabel->setPixmap(stopIcon.scaled(30,30,Qt::KeepAspectRatio));
+    ui->searchLabel->setPixmap(searchIcon.scaled(30,30,Qt::KeepAspectRatio));
 }
 
 MainWindow::~MainWindow()
@@ -20,24 +32,62 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::createMenus() {
-    QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
 
-    QAction *openAct = fileMenu->addAction(tr("&Open..."), this, [=]() {
-        QString filePath = QFileDialog::getOpenFileName(
-            this,
-            tr("Open Schematic File"),
-            QDir::homePath(),
-            tr("Schematic Files (*.json *.xml *.netlist);;All Files (*)")
-            );
 
-        if (!filePath.isEmpty()) {
-            QPointF center = schematicViewer->mapToScene(schematicViewer->viewport()->rect().center());
+void MainWindow::on_actionOpen_File_triggered()
+{
+    QString dirPath = QFileDialog::getExistingDirectory(
+        this,
+        tr("Open Schematic File"),
+        QDir::currentPath(),
+        QFileDialog::ShowDirsOnly          // option: only show directories
+        | QFileDialog::DontResolveSymlinks // optional
+        );
 
-            schematicViewer->openFile(filePath,center);
+    if (!dirPath.isEmpty()) {
+
+        QPointF center = schematicViewer->mapToScene(schematicViewer->viewport()->rect().center());
+        schematicViewer->openFile(dirPath,center);
+
+        QDir dir(dirPath);
+
+        // Get all files (not directories)
+        filesToList = dir.entryList(QDir::Files);
+
+        // Clear previous items
+        ui->listWidget->clear();
+
+        // Add files to QListWidget
+        for (const QString &file : filesToList) {
+
+            QIcon icon(":/imgs/imgsAndFiles/google-docs.png"); // your icon resource or file path
+            QListWidgetItem *item = new QListWidgetItem(icon, file);
+
+            ui->listWidget->addItem(item);  // only name
         }
-    });
-
-    fileMenu->addSeparator();
-    fileMenu->addAction(tr("E&xit"), this, &QWidget::close);
+    }
 }
+
+
+void MainWindow::on_actionExit_triggered()
+{
+    QApplication::quit();
+}
+
+
+void MainWindow::on_lineEdit_textChanged(const QString &arg1)
+{
+    ui->listWidget->clear();
+    if(!filesToList.empty())
+    {
+    for (const QString &file : filesToList) {
+        if (file.contains(arg1, Qt::CaseInsensitive)) {
+            QIcon icon(":/imgs/imgsAndFiles/google-docs.png"); // your icon resource or file path
+            QListWidgetItem *item = new QListWidgetItem(icon, file);
+
+            ui->listWidget->addItem(item);  // only name
+        }
+    }
+    }
+}
+

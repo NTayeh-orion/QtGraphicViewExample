@@ -17,9 +17,17 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_actionOpen_File_triggered();
+
+    void on_actionExit_triggered();
+
+    void on_lineEdit_textChanged(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
     SchematicViewer *schematicViewer;
-    void createMenus();
+    QString dirPath;
+    QStringList filesToList;
 };
 #endif // MAINWINDOW_H
