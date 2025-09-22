@@ -28,7 +28,7 @@ void MainWindow::createMenus() {
             this,
             tr("Open Schematic File"),
             QDir::homePath(),
-            tr("Schematic Files (*.json *.xml *.netlist);;All Files (*)")
+            tr("Schematic Files (*.json *.xml *.netlist *.v *.sv);;All Files (*)")
             );
 
         if (!filePath.isEmpty()) {

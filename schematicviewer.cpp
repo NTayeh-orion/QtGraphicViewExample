@@ -94,7 +94,9 @@
 #include <QFileInfo>
 #include <QPainter>
 #include <cmath>
-
+#include "gridblock.h"
+#include "verilogblock.h"
+#include "verilogparser.h"
 // SchematicViewer::SchematicViewer(QWidget *parent)
 //     : QGraphicsView(parent) {
 //     scene = new QGraphicsScene(this);
@@ -212,7 +214,21 @@ void SchematicViewer::openFile(const QString &filePath, QPointF dropPos) {
     qreal x = std::round(dropPos.x() / gridSize) * gridSize;
     qreal y = std::round(dropPos.y() / gridSize) * gridSize;
 
-    GridBlock *block = new GridBlock(fileName, 120, 60, gridSize);
+    if (fileInfo.suffix().toLower() == "v") {
+        ModuleInfo module = parseVerilogModule(filePath);
+        if (!module.name.isEmpty()) {
+            QStringList inputs, outputs;
+            for (const Port &p : module.ports) {
+                if (p.dir == "input") inputs.append(p.name);
+                else if (p.dir == "output") outputs.append(p.name);
+            }
+            GridBlock *block = new GridBlock(module.name, inputs, outputs, 120, 60, gridSize);
+            block->setPos(x, y);
+            scene->addItem(block);
+            return;
+        }
+    }
+    GridBlock *block = new GridBlock(fileName,{},{}, 120, 60, gridSize);
     block->setPos(x, y);
 
     scene->addItem(block);
@@ -256,5 +272,20 @@ void SchematicViewer::drawBackground(QPainter *painter, const QRectF &rect) {
         for (qreal y = top; y < rect.bottom(); y += gridSize) {
             painter->drawEllipse(QPointF(x, y), dotSize / 2.0, dotSize / 2.0);
         }
+    }
+}
+void SchematicViewer::keyPressEvent(QKeyEvent *event) {
+    if (event->key() == Qt::Key_Delete) {
+        QList<QGraphicsItem*> selectedItems = scene->selectedItems();
+        for (QGraphicsItem *item : selectedItems) {
+            Wire *wire = dynamic_cast<Wire*>(item);
+            if (wire) {
+                scene->removeItem(wire);
+                delete wire;
+            }
+        }
+    } else {
+        // Call base class for other keys
+        QGraphicsView::keyPressEvent(event);
     }
 }

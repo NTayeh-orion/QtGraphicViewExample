@@ -842,3 +842,9 @@ C:/Users/NTayeh/Documents/Qt/GraphicViewExample/schematicviewer.cpp
 C:/Users/NTayeh/Documents/Qt/GraphicViewExample/mainwindow.cpp
  uic:./ui_mainwindow.h
 C:/Users/NTayeh/Documents/Qt/GraphicViewExample/GridBlock.h
+C:/Users/NTayeh/Documents/Qt/GraphicViewExample/verilogblock.h
+C:/Users/NTayeh/Documents/Qt/GraphicViewExample/verilogparser.h
+C:/Users/NTayeh/Documents/Qt/GraphicViewExample/verilogblock.cpp
+C:/Users/NTayeh/Documents/Qt/GraphicViewExample/verilogparser.cpp
+C:/Users/NTayeh/Documents/Qt/GraphicViewExample/pin.h
+C:/Users/NTayeh/Documents/Qt/GraphicViewExample/pin.cpp

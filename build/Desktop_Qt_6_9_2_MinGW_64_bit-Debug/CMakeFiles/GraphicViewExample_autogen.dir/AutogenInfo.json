@@ -359,9 +359,27 @@
 			null
 		],
 		[
+			"C:/Users/NTayeh/Documents/Qt/GraphicViewExample/pin.h",
+			"MU",
+			"EWIEGA46WW/moc_pin.cpp",
+			null
+		],
+		[
 			"C:/Users/NTayeh/Documents/Qt/GraphicViewExample/schematicviewer.h",
 			"MU",
 			"EWIEGA46WW/moc_schematicviewer.cpp",
+			null
+		],
+		[
+			"C:/Users/NTayeh/Documents/Qt/GraphicViewExample/verilogblock.h",
+			"MU",
+			"EWIEGA46WW/moc_verilogblock.cpp",
+			null
+		],
+		[
+			"C:/Users/NTayeh/Documents/Qt/GraphicViewExample/verilogparser.h",
+			"MU",
+			"EWIEGA46WW/moc_verilogparser.cpp",
 			null
 		]
 	],
@@ -446,8 +464,19 @@
 			"MU",
 			null
 		],
+		[ "C:/Users/NTayeh/Documents/Qt/GraphicViewExample/pin.cpp", "MU", null ],
 		[
 			"C:/Users/NTayeh/Documents/Qt/GraphicViewExample/schematicviewer.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/NTayeh/Documents/Qt/GraphicViewExample/verilogblock.cpp",
+			"MU",
+			null
+		],
+		[
+			"C:/Users/NTayeh/Documents/Qt/GraphicViewExample/verilogparser.cpp",
 			"MU",
 			null
 		]
