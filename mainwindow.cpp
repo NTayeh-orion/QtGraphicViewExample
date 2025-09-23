@@ -49,21 +49,28 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionOpen_File_triggered()
 {
-    QString dirPath = QFileDialog::getExistingDirectory(
+    // QString dirPath = QFileDialog::getExistingDirectory(
+    //     this,
+    //     tr("Open Schematic File"),
+    //     QDir::currentPath(),
+    //     QFileDialog::ShowDirsOnly              // option: only show directories
+    //         | QFileDialog::DontResolveSymlinks // optional
+    // );
+
+    QString filePath = QFileDialog::getOpenFileName(
         this,
         tr("Open Schematic File"),
-        QDir::currentPath(),
-        QFileDialog::ShowDirsOnly              // option: only show directories
-            | QFileDialog::DontResolveSymlinks // optional
-    );
+        QDir::homePath(),
+        tr("Schematic Files (*.json *.xml *.netlist);;All Files (*)")
+        );
 
-    if (!dirPath.isEmpty())
+    if (!filePath.isEmpty())
     {
 
         QPointF center = schematicViewer->mapToScene(schematicViewer->viewport()->rect().center());
-        schematicViewer->openFile(dirPath, center);
+        schematicViewer->openFile(filePath, center);
 
-        QDir dir(dirPath);
+        QDir dir(filePath);
 
         // Get all files (not directories)
         filesToList = dir.entryList(QDir::Files);
