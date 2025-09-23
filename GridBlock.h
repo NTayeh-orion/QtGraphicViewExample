@@ -10,6 +10,7 @@
 #include <QPen>
 #include <QRegularExpression>
 #include <cmath>
+class ResizeHandle;
 
 class GridBlock : public QGraphicsRectItem
 {
@@ -26,6 +27,10 @@ protected:
 
 private:
     int gridSize;
+    QStringList inputs;
+    QStringList outputs;
+    QList<Pin*> pins;
+    ResizeHandle* handle;
 
     // Count total pins (expanding buses like a[3:0] into 4 pins)
     int expandCount(const QStringList &ports);

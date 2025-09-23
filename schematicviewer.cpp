@@ -57,6 +57,7 @@ void SchematicViewer::openFile(const QString &filePath, QPointF dropPos)
 void SchematicViewer::dragEnterEvent(QDragEnterEvent *event)
 {
     try {
+        qDebug() << "enter drag mode";
         if (event->mimeData()->hasUrls()) // checks if the drag contains file URLs (e.g., the user is dragging C:/schematics/alu.v).
             event->acceptProposedAction(); // Without calling this, Qt won’t allow dropping.
     } catch (const std::exception &e) {
