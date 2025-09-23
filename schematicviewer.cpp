@@ -5,7 +5,6 @@
 #include <QMessageBox>
 #include <QPainter>
 #include "GridBlock.h"
-#include "gridblock.h"
 #include "verilogparser.h"
 #include "wire.h"
 #include <cmath>
@@ -71,6 +70,11 @@ void SchematicViewer::dragEnterEvent(QDragEnterEvent *event)
 
         QMessageBox::critical(this, "Error", e.what());
     }
+}
+
+void SchematicViewer::dragMoveEvent(QDragMoveEvent *event)
+{
+
 }
 
 void SchematicViewer::dropEvent(QDropEvent *event)

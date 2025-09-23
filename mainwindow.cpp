@@ -8,6 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     schematicViewer = new SchematicViewer(this);
+    ui->graphicViewFrame->setAcceptDrops(false);
     ui->graphicViewFrame->layout()->addWidget(schematicViewer);
     ui->lineEdit->setPlaceholderText(" Search files... ");
 
@@ -28,17 +29,17 @@ MainWindow::MainWindow(QWidget *parent)
 
     terminalTab = new QWidget();
 
-    QProcess *proc = new QProcess(terminalTab);
+    // QProcess *proc = new QProcess(terminalTab);
 
-#ifdef Q_OS_WIN
-    // Windows → launch cmd.exe (but no -into support)
-    proc->start("cmd.exe");
-#elif defined(Q_OS_LINUX) || defined(Q_OS_MACOS)
-    // Linux/Mac → embed xterm into the widget
-    proc->start("xterm", {"-into", QString::number(container->winId())});
-#endif
+// #ifdef Q_OS_WIN
+//     // Windows → launch cmd.exe (but no -into support)
+//     proc->start("cmd.exe");
+// #elif defined(Q_OS_LINUX) || defined(Q_OS_MACOS)
+//     // Linux/Mac → embed xterm into the widget
+//     proc->start("xterm", {"-into", QString::number(container->winId())});
+// #endif
 
-    ui->terminalTabWidget->addTab(terminalTab, "Terminal");
+    // ui->terminalTabWidget->addTab(terminalTab, "Terminal");
 }
 
 MainWindow::~MainWindow()
