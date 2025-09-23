@@ -2,6 +2,11 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMessageBox>
+#include <QListWidgetItem>
+#include <QProcess>
+#include <QSysInfo>
+
 #include "schematicviewer.h"
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -17,9 +22,22 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_actionOpen_File_triggered();
+
+    void on_actionExit_triggered();
+
+    void on_lineEdit_textChanged(const QString &arg1);
+
+    void on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
+
+    void on_listWidget_itemActivated(QListWidgetItem *item);
+
 private:
     Ui::MainWindow *ui;
     SchematicViewer *schematicViewer;
-    void createMenus();
+    QString dirPath;
+    QStringList filesToList;
+    QWidget *terminalTab;
 };
 #endif // MAINWINDOW_H

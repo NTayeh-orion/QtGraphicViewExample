@@ -15,15 +15,18 @@ ModuleInfo parseVerilogModule(const QString &filePath)
     // QRegularExpression portRegex(R"((input|output)\s*(?:\[[^\]]+\]\s*)?(\w+))");
     QRegularExpression portRegex(R"((input|output)\s*(?:\[[^\]]+\]\s*)?(\w+))");
 
-    while (!in.atEnd()) {
+    while (!in.atEnd())
+    {
         QString line = in.readLine();
         QRegularExpressionMatch match = moduleRegex.match(line);
-        if (match.hasMatch()) {
+        if (match.hasMatch())
+        {
             info.name = match.captured(1);
             QString portList = match.captured(2);
 
             QRegularExpressionMatchIterator it = portRegex.globalMatch(portList);
-            while (it.hasNext()) {
+            while (it.hasNext())
+            {
                 QRegularExpressionMatch m = it.next();
                 Port p;
                 p.dir = m.captured(1);

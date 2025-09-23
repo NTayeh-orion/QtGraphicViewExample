@@ -9,7 +9,11 @@ class Wire; // forward declaration
 class Pin : public QGraphicsEllipseItem
 {
 public:
-    enum Direction { Input, Output };
+    enum Direction
+    {
+        Input,
+        Output
+    };
 
     Pin(Direction dir, const QString &name, int bitIndex = 0, QGraphicsItem *parent = nullptr);
 

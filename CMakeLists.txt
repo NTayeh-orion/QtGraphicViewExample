@@ -24,15 +24,17 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
         schematicviewer.h schematicviewer.cpp
-        GridBlock.h
         verilogparser.h
         verilogparser.cpp
-
-
+        verilogblock.h
+        verilogblock.cpp
         pin.h pin.cpp
-        GridBlock.cpp
-        wire.h wire.cpp
 
+        rcs.qrc
+        wire.h
+        wire.cpp
+        GridBlock.h
+        GridBlock.cpp
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET GraphicViewExample APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

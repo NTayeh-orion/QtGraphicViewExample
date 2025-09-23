@@ -7,10 +7,7 @@
 // ---------------- Pin ----------------
 
 Pin::Pin(Direction dir, const QString &name, int bitIndex, QGraphicsItem *parent)
-    : QGraphicsEllipseItem(parent)
-    , dir(dir)
-    , pinName(name)
-    , m_bitIndex(bitIndex)
+    : QGraphicsEllipseItem(parent), dir(dir), pinName(name), m_bitIndex(bitIndex)
 {
     // setRect(-5, -5, 10, 10);  // small circle
     setRect(-7, -7, 14, 14);
@@ -41,14 +38,16 @@ QPointF Pin::connectionPoint() const
 
 void Pin::addWire(Wire *wire)
 {
-    if (!wires.contains(wire)) {
+    if (!wires.contains(wire))
+    {
         wires.append(wire);
     }
 }
 
 void Pin::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton) {
+    if (event->button() == Qt::LeftButton)
+    {
         tempWire = new Wire(this);
         scene()->addItem(tempWire);
         tempWire->updatePath(mapToScene(rect().center()));
@@ -59,7 +58,8 @@ void Pin::mousePressEvent(QGraphicsSceneMouseEvent *event)
 }
 void Pin::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (tempWire) {
+    if (tempWire)
+    {
         tempWire->updatePath(event->scenePos());
     }
     QGraphicsEllipseItem::mouseMoveEvent(event);
@@ -67,11 +67,14 @@ void Pin::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void Pin::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (tempWire && event->button() == Qt::LeftButton) {
+    if (tempWire && event->button() == Qt::LeftButton)
+    {
         QList<QGraphicsItem *> itemsAtPos = scene()->items(event->scenePos());
-        for (auto *item : itemsAtPos) {
+        for (auto *item : itemsAtPos)
+        {
             Pin *otherPin = dynamic_cast<Pin *>(item);
-            if (otherPin && otherPin != this) {
+            if (otherPin && otherPin != this)
+            {
                 tempWire->setEndPin(otherPin);
                 this->addWire(tempWire);
                 otherPin->addWire(tempWire);
@@ -87,16 +90,19 @@ void Pin::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 }
 QVariant Pin::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-    try {
-        if ((change == QGraphicsItem::ItemPositionChange
-             || change == QGraphicsItem::ItemScenePositionHasChanged)
-            && !wires.isEmpty()) {
-            for (Wire *wire : wires) {
+    try
+    {
+        if ((change == QGraphicsItem::ItemPositionChange || change == QGraphicsItem::ItemScenePositionHasChanged) && !wires.isEmpty())
+        {
+            for (Wire *wire : wires)
+            {
                 wire->updatePath();
             }
         }
         return QGraphicsEllipseItem::itemChange(change, value);
-    } catch (const std::exception &e) {
+    }
+    catch (const std::exception &e)
+    {
         qCritical() << "Error:" << e.what();
 
         QMessageBox::critical(nullptr, "Error", e.what());

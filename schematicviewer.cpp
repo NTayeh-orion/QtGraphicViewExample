@@ -5,7 +5,6 @@
 #include <QMessageBox>
 #include <QPainter>
 #include "GridBlock.h"
-#include "gridblock.h"
 #include "verilogparser.h"
 #include "wire.h"
 #include <cmath>
@@ -17,6 +16,7 @@ SchematicViewer::SchematicViewer(QWidget *parent)
 
     setRenderHint(QPainter::Antialiasing);
     setDragMode(QGraphicsView::ScrollHandDrag);
+    this->viewport()->setAcceptDrops(true);
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
     setAcceptDrops(true);
@@ -32,11 +32,14 @@ void SchematicViewer::openFile(const QString &filePath, QPointF dropPos)
     qreal x = std::round(dropPos.x() / gridSize) * gridSize;
     qreal y = std::round(dropPos.y() / gridSize) * gridSize;
 
-    if (fileInfo.suffix().toLower() == "v") {
+    if (fileInfo.suffix().toLower() == "v")
+    {
         ModuleInfo module = parseVerilogModule(filePath);
-        if (!module.name.isEmpty()) {
+        if (!module.name.isEmpty())
+        {
             QStringList inputs, outputs;
-            for (const Port &p : module.ports) {
+            for (const Port &p : module.ports)
+            {
                 if (p.dir == "input")
                     inputs.append(p.name);
                 else if (p.dir == "output")
@@ -56,29 +59,41 @@ void SchematicViewer::openFile(const QString &filePath, QPointF dropPos)
 
 void SchematicViewer::dragEnterEvent(QDragEnterEvent *event)
 {
-    try {
-        qDebug() << "enter drag mode";
-        if (event->mimeData()->hasUrls()) // checks if the drag contains file URLs (e.g., the user is dragging C:/schematics/alu.v).
+    try
+    {
+        if (event->mimeData()->hasUrls())  // checks if the drag contains file URLs (e.g., the user is dragging C:/schematics/alu.v).
             event->acceptProposedAction(); // Without calling this, Qt won’t allow dropping.
-    } catch (const std::exception &e) {
+    }
+    catch (const std::exception &e)
+    {
         qCritical() << "Error:" << e.what();
 
         QMessageBox::critical(this, "Error", e.what());
     }
 }
 
+void SchematicViewer::dragMoveEvent(QDragMoveEvent *event)
+{
+
+}
+
 void SchematicViewer::dropEvent(QDropEvent *event)
 {
-    try {
-        foreach (const QUrl &url, event->mimeData()->urls()) {
+    try
+    {
+        foreach (const QUrl &url, event->mimeData()->urls())
+        {
             QString filePath = url.toLocalFile();
-            if (!filePath.isEmpty()) {
+            if (!filePath.isEmpty())
+            {
                 // Map drop position to scene coordinates
                 QPointF scenePos = mapToScene(event->position().toPoint());
                 openFile(filePath, scenePos);
             }
         }
-    } catch (const std::exception &e) {
+    }
+    catch (const std::exception &e)
+    {
         qCritical() << "Error:" << e.what();
 
         QMessageBox::critical(this, "Error", e.what());
@@ -105,32 +120,44 @@ void SchematicViewer::drawBackground(QPainter *painter, const QRectF &rect)
     qreal left = std::floor(rect.left() / gridSize) * gridSize;
     qreal top = std::floor(rect.top() / gridSize) * gridSize;
 
-    for (qreal x = left; x < rect.right(); x += gridSize) {
-        for (qreal y = top; y < rect.bottom(); y += gridSize) {
+    for (qreal x = left; x < rect.right(); x += gridSize)
+    {
+        for (qreal y = top; y < rect.bottom(); y += gridSize)
+        {
             painter->drawEllipse(QPointF(x, y), dotSize / 2.0, dotSize / 2.0);
         }
     }
 }
 void SchematicViewer::keyPressEvent(QKeyEvent *event)
 {
-    try {
-        if (event->key() == Qt::Key_Delete) {
+    try
+    {
+        if (event->key() == Qt::Key_Delete)
+        {
             QList<QGraphicsItem *> selectedItems = scene->selectedItems();
-            for (QGraphicsItem *item : selectedItems) {
+            for (QGraphicsItem *item : selectedItems)
+            {
                 Wire *wire = dynamic_cast<Wire *>(item);
-                if (wire) {
+                if (wire)
+                {
                     scene->removeItem(wire);
                     delete wire;
-                } else if (GridBlock *block = dynamic_cast<GridBlock *>(item)) {
+                }
+                else if (GridBlock *block = dynamic_cast<GridBlock *>(item))
+                {
                     scene->removeItem(block);
                     delete block; // this will clean up its wires too
                 }
             }
-        } else {
+        }
+        else
+        {
             // Call base class for other keys
             QGraphicsView::keyPressEvent(event);
         }
-    } catch (const std::exception &e) {
+    }
+    catch (const std::exception &e)
+    {
         qCritical() << "Error:" << e.what();
 
         QMessageBox::critical(this, "Error", e.what());
