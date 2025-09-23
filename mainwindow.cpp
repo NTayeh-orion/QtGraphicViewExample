@@ -2,13 +2,16 @@
 #include "./ui_mainwindow.h"
 #include <QFileDialog>
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     schematicViewer = new SchematicViewer(this);
     setCentralWidget(schematicViewer);
+    schematicViewer->setFocusPolicy(Qt::StrongFocus);
 
     createMenus();
     resize(800, 600);
@@ -20,7 +23,8 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::createMenus() {
+void MainWindow::createMenus()
+{
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
 
     QAction *openAct = fileMenu->addAction(tr("&Open..."), this, [=]() {
@@ -28,13 +32,13 @@ void MainWindow::createMenus() {
             this,
             tr("Open Schematic File"),
             QDir::homePath(),
-            tr("Schematic Files (*.json *.xml *.netlist *.v *.sv);;All Files (*)")
-            );
+            tr("Schematic Files (*.json *.xml *.netlist *.v *.sv);;All Files (*)"));
 
         if (!filePath.isEmpty()) {
-            QPointF center = schematicViewer->mapToScene(schematicViewer->viewport()->rect().center());
+            QPointF center = schematicViewer->mapToScene(
+                schematicViewer->viewport()->rect().center());
 
-            schematicViewer->openFile(filePath,center);
+            schematicViewer->openFile(filePath, center);
         }
     });
 

@@ -1,9 +1,10 @@
 #include "verilogparser.h"
 #include <QFile>
-#include <QTextStream>
 #include <QRegularExpression>
+#include <QTextStream>
 
-ModuleInfo parseVerilogModule(const QString &filePath) {
+ModuleInfo parseVerilogModule(const QString &filePath)
+{
     ModuleInfo info;
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -13,7 +14,6 @@ ModuleInfo parseVerilogModule(const QString &filePath) {
     QRegularExpression moduleRegex(R"(module\s+(\w+)\s*\(([^)]*)\))");
     // QRegularExpression portRegex(R"((input|output)\s*(?:\[[^\]]+\]\s*)?(\w+))");
     QRegularExpression portRegex(R"((input|output)\s*(?:\[[^\]]+\]\s*)?(\w+))");
-
 
     while (!in.atEnd()) {
         QString line = in.readLine();

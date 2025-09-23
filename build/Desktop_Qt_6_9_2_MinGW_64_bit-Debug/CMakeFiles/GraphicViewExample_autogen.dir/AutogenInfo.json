@@ -371,15 +371,15 @@
 			null
 		],
 		[
-			"C:/Users/NTayeh/Documents/Qt/GraphicViewExample/verilogblock.h",
-			"MU",
-			"EWIEGA46WW/moc_verilogblock.cpp",
-			null
-		],
-		[
 			"C:/Users/NTayeh/Documents/Qt/GraphicViewExample/verilogparser.h",
 			"MU",
 			"EWIEGA46WW/moc_verilogparser.cpp",
+			null
+		],
+		[
+			"C:/Users/NTayeh/Documents/Qt/GraphicViewExample/wire.h",
+			"MU",
+			"EWIEGA46WW/moc_wire.cpp",
 			null
 		]
 	],
@@ -455,6 +455,11 @@
 	"SOURCES" : 
 	[
 		[
+			"C:/Users/NTayeh/Documents/Qt/GraphicViewExample/GridBlock.cpp",
+			"MU",
+			null
+		],
+		[
 			"C:/Users/NTayeh/Documents/Qt/GraphicViewExample/main.cpp",
 			"MU",
 			null
@@ -471,12 +476,12 @@
 			null
 		],
 		[
-			"C:/Users/NTayeh/Documents/Qt/GraphicViewExample/verilogblock.cpp",
+			"C:/Users/NTayeh/Documents/Qt/GraphicViewExample/verilogparser.cpp",
 			"MU",
 			null
 		],
 		[
-			"C:/Users/NTayeh/Documents/Qt/GraphicViewExample/verilogparser.cpp",
+			"C:/Users/NTayeh/Documents/Qt/GraphicViewExample/wire.cpp",
 			"MU",
 			null
 		]

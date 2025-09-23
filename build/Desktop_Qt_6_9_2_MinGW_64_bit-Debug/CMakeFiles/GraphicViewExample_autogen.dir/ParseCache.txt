@@ -848,3 +848,6 @@ C:/Users/NTayeh/Documents/Qt/GraphicViewExample/verilogblock.cpp
 C:/Users/NTayeh/Documents/Qt/GraphicViewExample/verilogparser.cpp
 C:/Users/NTayeh/Documents/Qt/GraphicViewExample/pin.h
 C:/Users/NTayeh/Documents/Qt/GraphicViewExample/pin.cpp
+C:/Users/NTayeh/Documents/Qt/GraphicViewExample/GridBlock.cpp
+C:/Users/NTayeh/Documents/Qt/GraphicViewExample/wire.h
+C:/Users/NTayeh/Documents/Qt/GraphicViewExample/wire.cpp
