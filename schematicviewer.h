@@ -7,6 +7,7 @@
 #include <QDropEvent>
 #include <QMimeData>
 #include <QDebug>
+#include <QMessageBox>
 
 class SchematicViewer : public QGraphicsView {
     Q_OBJECT
@@ -17,6 +18,8 @@ public:
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event) override;
+    void dragLeaveEvent(QDragLeaveEvent *event) override;
+    void dragMoveEvent(QDragMoveEvent *event) override;
     void dropEvent(QDropEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
     void drawBackground(QPainter *painter, const QRectF &rect) override; // 👈 grid

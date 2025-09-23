@@ -200,6 +200,7 @@ SchematicViewer::SchematicViewer(QWidget *parent)
 
     setRenderHint(QPainter::Antialiasing);
     setDragMode(QGraphicsView::ScrollHandDrag);
+    this->viewport()->setAcceptDrops(true);
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
     setAcceptDrops(true);
@@ -235,9 +236,47 @@ void SchematicViewer::openFile(const QString &filePath, QPointF dropPos) {
 }
 
 void SchematicViewer::dragEnterEvent(QDragEnterEvent *event) {
-    if (event->mimeData()->hasUrls())
+    // if (event->mimeData()->hasUrls())
+    // {
         event->acceptProposedAction();
+        qDebug() << "dhdfhfdhdhdf    " ;
+
+    // }
+    // if (event->mimeData()->hasText()) {
+        QString text = event->mimeData()->text();
+    // QMessageBox::information(this,"ffffff","From drag");
+
+    qDebug() << "ffffff    " <<text ;
+    // }
 }
+
+void SchematicViewer::dragLeaveEvent(QDragLeaveEvent *event)
+{
+    // if (event->mimeData()->hasUrls())
+    //     event->acceptProposedAction();
+
+    // // if (event->mimeData()->hasText()) {
+    // QString text = event->mimeData()->text();
+    // // QMessageBox::information(this,"ffffff","From drag");
+
+    // qDebug() << "dddddddd\n";
+    // }
+}
+
+void SchematicViewer::dragMoveEvent(QDragMoveEvent *event)
+{
+    if (event->mimeData()->hasText()) {
+        event->acceptProposedAction();  // MUST call this
+    } else {
+        event->ignore();
+    }if (event->mimeData()->hasText()) {
+        event->acceptProposedAction();  // MUST call this
+    } else {
+        event->ignore();
+    }
+}
+
+
 
 void SchematicViewer::dropEvent(QDropEvent *event) {
     foreach (const QUrl &url, event->mimeData()->urls()) {
@@ -247,7 +286,16 @@ void SchematicViewer::dropEvent(QDropEvent *event) {
             QPointF scenePos = mapToScene(event->position().toPoint());
             openFile(filePath, scenePos);
         }
+        if (event->mimeData()->hasText()) {
+            QString text = event->mimeData()->text();  // 👈 dragged item text
+            qDebug() << "Dropped item text:" << text;
+        }
+        // if (event->mimeData()->hasText()) {
+        //     QString text = event->mimeData()->text();
+
+        // }
     }
+    QMessageBox::information(this,"ffffff","From drop");
 }
 
 void SchematicViewer::wheelEvent(QWheelEvent *event) {
