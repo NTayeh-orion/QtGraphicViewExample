@@ -24,6 +24,21 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pouseLabel->setPixmap(pouseIcon.scaled(30, 30, Qt::KeepAspectRatio));
     ui->stopLabel->setPixmap(stopIcon.scaled(30, 30, Qt::KeepAspectRatio));
     ui->searchLabel->setPixmap(searchIcon.scaled(30, 30, Qt::KeepAspectRatio));
+
+    terminalTab = new QWidget();
+
+    QProcess *proc = new QProcess(terminalTab);
+
+#ifdef Q_OS_WIN
+    // Windows → launch cmd.exe (but no -into support)
+    proc->start("cmd.exe");
+#elif defined(Q_OS_LINUX) || defined(Q_OS_MACOS)
+    // Linux/Mac → embed xterm into the widget
+    proc->start("xterm", {"-into", QString::number(container->winId())});
+#endif
+
+    ui->terminalTabWidget->addTab(terminalTab, "Terminal");
+
 }
 
 MainWindow::~MainWindow()
@@ -89,3 +104,15 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
         }
     }
 }
+
+void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
+{
+
+}
+
+
+void MainWindow::on_listWidget_itemActivated(QListWidgetItem *item)
+{
+ QMessageBox::information(this,"ffd",item->text());
+}
+

@@ -332,7 +332,10 @@
                      <bool>true</bool>
                     </property>
                     <property name="dragDropMode">
-                     <enum>QAbstractItemView::DragDropMode::DragDrop</enum>
+                     <enum>QAbstractItemView::DragDropMode::DragOnly</enum>
+                    </property>
+                    <property name="defaultDropAction">
+                     <enum>Qt::DropAction::CopyAction</enum>
                     </property>
                    </widget>
                   </item>
@@ -344,6 +347,9 @@
                    <width>450</width>
                    <height>0</height>
                   </size>
+                 </property>
+                 <property name="acceptDrops">
+                  <bool>true</bool>
                  </property>
                  <property name="frameShape">
                   <enum>QFrame::Shape::StyledPanel</enum>
@@ -421,15 +427,13 @@
                   </property>
                   <layout class="QVBoxLayout" name="verticalLayout_4">
                    <item>
-                    <widget class="QTabWidget" name="tabWidget_3">
+                    <widget class="QTabWidget" name="terminalTabWidget">
+                     <property name="currentIndex">
+                      <number>0</number>
+                     </property>
                      <widget class="QWidget" name="tab_3">
                       <attribute name="title">
                        <string>Tab 1</string>
-                      </attribute>
-                     </widget>
-                     <widget class="QWidget" name="tab_4">
-                      <attribute name="title">
-                       <string>Tab 2</string>
                       </attribute>
                      </widget>
                     </widget>
@@ -511,6 +515,9 @@
    <property name="text">
     <string>Open File</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+O</string>
+   </property>
   </action>
   <action name="actionExit">
    <property name="icon">
@@ -519,6 +526,9 @@
    </property>
    <property name="text">
     <string>Exit</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+X</string>
    </property>
   </action>
  </widget>
