@@ -121,3 +121,40 @@ void MainWindow::on_listWidget_itemActivated(QListWidgetItem *item)
 {
     QMessageBox::information(this, "ffd", item->text());
 }
+
+void MainWindow::on_actionopen_Dir_triggered() {
+    QString dirPath = QFileDialog::getExistingDirectory(
+        this,
+        tr("Open Schematic File"),
+        QDir::currentPath(),
+        QFileDialog::ShowDirsOnly              // option: only show directories
+            | QFileDialog::DontResolveSymlinks // optional
+    );
+
+
+
+    if (!dirPath.isEmpty())
+    {
+
+        QPointF center = schematicViewer->mapToScene(schematicViewer->viewport()->rect().center());
+        schematicViewer->openFile(dirPath, center);
+
+        QDir dir(dirPath);
+
+        // Get all files (not directories)
+        filesToList = dir.entryList(QDir::Files);
+
+        // Clear previous items
+        ui->listWidget->clear();
+
+        // Add files to QListWidget
+        for (const QString &file : filesToList)
+        {
+
+            QIcon icon(":/imgs/imgsAndFiles/google-docs.png"); // your icon resource or file path
+            QListWidgetItem *item = new QListWidgetItem(icon, file);
+
+            ui->listWidget->addItem(item); // only name
+        }
+    }
+}

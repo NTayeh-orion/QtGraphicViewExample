@@ -263,7 +263,7 @@
              <property name="frameShadow">
               <enum>QFrame::Shadow::Raised</enum>
              </property>
-             <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="0">
               <item>
                <widget class="QSplitter" name="splitter">
                 <property name="orientation">
@@ -344,7 +344,7 @@
                 <widget class="QFrame" name="graphicViewFrame">
                  <property name="minimumSize">
                   <size>
-                   <width>450</width>
+                   <width>700</width>
                    <height>0</height>
                   </size>
                  </property>
@@ -479,6 +479,7 @@
     </property>
     <addaction name="actionOpen_File"/>
     <addaction name="actionExit"/>
+    <addaction name="actionopen_Dir"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
@@ -510,7 +511,7 @@
   <action name="actionOpen_File">
    <property name="icon">
     <iconset resource="rcs.qrc">
-     <normaloff>:/imgs/imgsAndFiles/folder.png</normaloff>:/imgs/imgsAndFiles/folder.png</iconset>
+     <normaloff>:/imgs/imgsAndFiles/word.png</normaloff>:/imgs/imgsAndFiles/word.png</iconset>
    </property>
    <property name="text">
     <string>Open File</string>
@@ -529,6 +530,15 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+X</string>
+   </property>
+  </action>
+  <action name="actionopen_Dir">
+   <property name="icon">
+    <iconset resource="rcs.qrc">
+     <normaloff>:/imgs/imgsAndFiles/folder.png</normaloff>:/imgs/imgsAndFiles/folder.png</iconset>
+   </property>
+   <property name="text">
+    <string>open Dir</string>
    </property>
   </action>
  </widget>

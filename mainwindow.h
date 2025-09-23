@@ -33,6 +33,8 @@ private slots:
 
     void on_listWidget_itemActivated(QListWidgetItem *item);
 
+    void on_actionopen_Dir_triggered();
+
 private:
     Ui::MainWindow *ui;
     SchematicViewer *schematicViewer;

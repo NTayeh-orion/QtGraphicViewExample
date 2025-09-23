@@ -9,5 +9,6 @@
         <file>imgsAndFiles/pause-button.png</file>
         <file>imgsAndFiles/shortcut.png</file>
         <file>imgsAndFiles/google-docs.png</file>
+        <file>imgsAndFiles/word.png</file>
     </qresource>
 </RCC>
