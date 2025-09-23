@@ -6,6 +6,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
     schematicViewer = new SchematicViewer(this);
     ui->graphicViewFrame->layout()->addWidget(schematicViewer);
     ui->lineEdit->setPlaceholderText(" Search files... ");
@@ -38,7 +39,6 @@ MainWindow::MainWindow(QWidget *parent)
 #endif
 
     ui->terminalTabWidget->addTab(terminalTab, "Terminal");
-
 }
 
 MainWindow::~MainWindow()
@@ -107,12 +107,9 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 
 void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
 {
-
 }
-
 
 void MainWindow::on_listWidget_itemActivated(QListWidgetItem *item)
 {
- QMessageBox::information(this,"ffd",item->text());
+    QMessageBox::information(this, "ffd", item->text());
 }
-

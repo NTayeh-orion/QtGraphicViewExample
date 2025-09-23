@@ -1,14 +1,16 @@
 #ifndef VERILOGPARSER_H
 #define VERILOGPARSER_H
-#include <QString>
 #include <QList>
+#include <QString>
 
-struct Port {
-    QString dir;   // "input" or "output"
+struct Port
+{
+    QString dir; // "input" or "output"
     QString name;
 };
 
-struct ModuleInfo {
+struct ModuleInfo
+{
     QString name;
     QList<Port> ports;
 };

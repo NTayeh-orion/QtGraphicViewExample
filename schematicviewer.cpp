@@ -1,200 +1,17 @@
-// #include "schematicviewer.h"
-// #include <QGraphicsRectItem>
-// #include <QGraphicsTextItem>
-// #include <QFileInfo>
-// #include <QPainter>
-
-// SchematicViewer::SchematicViewer(QWidget *parent)
-//     : QGraphicsView(parent) {
-//     scene = new QGraphicsScene(this);
-//     setScene(scene);
-
-//     setRenderHint(QPainter::Antialiasing);
-//     setDragMode(QGraphicsView::ScrollHandDrag);
-//     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-
-//     setAcceptDrops(true);
-// }
-
-// void SchematicViewer::openFile(const QString &filePath) {
-//     scene->clear();
-//     qDebug() << "Opening schematic file:" << filePath;
-
-//     QFileInfo fileInfo(filePath);
-//     QString fileName = fileInfo.fileName();
-
-//     // --- Grid size ---
-//     const int gridSize = 20;
-
-//     // Snap position to grid (centered at origin)
-//     int x = (0 / gridSize) * gridSize;
-//     int y = (0 / gridSize) * gridSize;
-
-//     // --- Draw block ---
-//     QGraphicsRectItem *block = scene->addRect(x, y, 120, 60,
-//                                               QPen(Qt::black),
-//                                               QBrush(Qt::lightGray));
-
-//     // --- Add file name label inside block ---
-//     QGraphicsTextItem *label = scene->addText(fileName, QFont("Arial", 12));
-//     label->setDefaultTextColor(Qt::blue);
-//     QRectF rect = block->rect();
-//     label->setPos(rect.center().x() - label->boundingRect().width() / 2,
-//                   rect.center().y() - label->boundingRect().height() / 2);
-
-//     label->setParentItem(block); // make label move with block
-// }
-
-// void SchematicViewer::dragEnterEvent(QDragEnterEvent *event) {
-//     if (event->mimeData()->hasUrls())
-//         event->acceptProposedAction();
-// }
-
-// void SchematicViewer::dropEvent(QDropEvent *event) {
-//     foreach (const QUrl &url, event->mimeData()->urls()) {
-//         QString filePath = url.toLocalFile();
-//         if (!filePath.isEmpty()) {
-//             openFile(filePath);
-//         }
-//     }
-// }
-
-// void SchematicViewer::wheelEvent(QWheelEvent *event) {
-//     const double scaleFactor = 1.15;
-//     if (event->angleDelta().y() > 0)
-//         scale(scaleFactor, scaleFactor);
-//     else
-//         scale(1.0 / scaleFactor, 1.0 / scaleFactor);
-// }
-
-// void SchematicViewer::drawBackground(QPainter *painter, const QRectF &rect) {
-//     const int gridSize = 20;
-//     const int dotSize = 2; // size of grid points
-
-//     painter->setPen(Qt::NoPen);
-//     painter->setBrush(QColor(200, 200, 200)); // light gray dots
-
-//     // Compute starting points aligned to grid
-//     qreal left = int(rect.left()) - (int(rect.left()) % gridSize);
-//     qreal top  = int(rect.top())  - (int(rect.top())  % gridSize);
-
-//     // Draw points at grid intersections
-//     for (qreal x = left; x < rect.right(); x += gridSize) {
-//         for (qreal y = top; y < rect.bottom(); y += gridSize) {
-//             painter->drawEllipse(QPointF(x, y), dotSize / 2.0, dotSize / 2.0);
-//         }
-//     }
-// }
-
-
-
 #include "schematicviewer.h"
+#include <QFileInfo>
 #include <QGraphicsRectItem>
 #include <QGraphicsTextItem>
-#include <QFileInfo>
+#include <QMessageBox>
 #include <QPainter>
-#include <cmath>
-#include "gridblock.h"
-#include "verilogblock.h"
-#include "verilogparser.h"
-// SchematicViewer::SchematicViewer(QWidget *parent)
-//     : QGraphicsView(parent) {
-//     scene = new QGraphicsScene(this);
-//     setScene(scene);
-
-//     setRenderHint(QPainter::Antialiasing);
-//     setDragMode(QGraphicsView::ScrollHandDrag);
-//     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
-
-//     setAcceptDrops(true);
-// }
-
-// void SchematicViewer::openFile(const QString &filePath) {
-//     scene->clear();
-//     qDebug() << "Opening schematic file:" << filePath;
-
-//     QFileInfo fileInfo(filePath);
-//     QString fileName = fileInfo.fileName();
-
-//     // --- Grid settings ---
-//     const int gridSize = 20;
-
-//     // Snap a position to the nearest grid point (here center of scene ~ (0,0))
-//     int rawX = 0;
-//     int rawY = 0;
-//     int snappedX = std::round(double(rawX) / gridSize) * gridSize;
-//     int snappedY = std::round(double(rawY) / gridSize) * gridSize;
-
-//     // --- Draw block ---
-//     QGraphicsRectItem *block = scene->addRect(0, 0, 120, 60,
-//                                               QPen(Qt::black),
-//                                               QBrush(Qt::lightGray));
-//     block->setPos(snappedX, snappedY);
-
-//     // --- Add file name inside block ---
-//     QGraphicsTextItem *label = scene->addText(fileName, QFont("Arial", 12));
-//     label->setDefaultTextColor(Qt::blue);
-
-//     QRectF rect = block->rect();
-//     label->setPos(rect.center().x() - label->boundingRect().width() / 2,
-//                   rect.center().y() - label->boundingRect().height() / 2);
-
-//     label->setParentItem(block); // stick label to block
-// }
-
-// void SchematicViewer::dragEnterEvent(QDragEnterEvent *event) {
-//     if (event->mimeData()->hasUrls())
-//         event->acceptProposedAction();
-// }
-
-// void SchematicViewer::dropEvent(QDropEvent *event) {
-//     foreach (const QUrl &url, event->mimeData()->urls()) {
-//         QString filePath = url.toLocalFile();
-//         if (!filePath.isEmpty()) {
-//             openFile(filePath);
-//         }
-//     }
-// }
-
-// void SchematicViewer::wheelEvent(QWheelEvent *event) {
-//     const double scaleFactor = 1.15;
-//     if (event->angleDelta().y() > 0)
-//         scale(scaleFactor, scaleFactor);
-//     else
-//         scale(1.0 / scaleFactor, 1.0 / scaleFactor);
-// }
-
-// void SchematicViewer::drawBackground(QPainter *painter, const QRectF &rect) {
-//     const int gridSize = 20;
-//     const int dotSize = 2;
-
-//     painter->setPen(Qt::NoPen);
-//     painter->setBrush(QColor(180, 180, 180)); // darker gray for visibility
-
-//     // Start aligned to grid
-//     qreal left = std::floor(rect.left() / gridSize) * gridSize;
-//     qreal top  = std::floor(rect.top()  / gridSize) * gridSize;
-
-//     // Draw grid points
-//     for (qreal x = left; x < rect.right(); x += gridSize) {
-//         for (qreal y = top; y < rect.bottom(); y += gridSize) {
-//             painter->drawEllipse(QPointF(x, y), dotSize / 2.0, dotSize / 2.0);
-//         }
-//     }
-// }
-
-
-
-
-
-
-#include "schematicviewer.h"
 #include "GridBlock.h"
-#include <QFileInfo>
-#include <QPainter>
-
+#include "gridblock.h"
+#include "verilogparser.h"
+#include "wire.h"
+#include <cmath>
 SchematicViewer::SchematicViewer(QWidget *parent)
-    : QGraphicsView(parent) {
+    : QGraphicsView(parent)
+{
     scene = new QGraphicsScene(this);
     setScene(scene);
 
@@ -206,7 +23,8 @@ SchematicViewer::SchematicViewer(QWidget *parent)
     setAcceptDrops(true);
 }
 
-void SchematicViewer::openFile(const QString &filePath, QPointF dropPos) {
+void SchematicViewer::openFile(const QString &filePath, QPointF dropPos)
+{
     QFileInfo fileInfo(filePath);
     QString fileName = fileInfo.fileName();
 
@@ -215,90 +33,71 @@ void SchematicViewer::openFile(const QString &filePath, QPointF dropPos) {
     qreal x = std::round(dropPos.x() / gridSize) * gridSize;
     qreal y = std::round(dropPos.y() / gridSize) * gridSize;
 
-    if (fileInfo.suffix().toLower() == "v") {
+    if (fileInfo.suffix().toLower() == "v")
+    {
         ModuleInfo module = parseVerilogModule(filePath);
-        if (!module.name.isEmpty()) {
+        if (!module.name.isEmpty())
+        {
             QStringList inputs, outputs;
-            for (const Port &p : module.ports) {
-                if (p.dir == "input") inputs.append(p.name);
-                else if (p.dir == "output") outputs.append(p.name);
+            for (const Port &p : module.ports)
+            {
+                if (p.dir == "input")
+                    inputs.append(p.name);
+                else if (p.dir == "output")
+                    outputs.append(p.name);
             }
-            GridBlock *block = new GridBlock(module.name, inputs, outputs, 120, 60, gridSize);
+            GridBlock *block = new GridBlock(module.name, inputs, outputs, gridSize);
             block->setPos(x, y);
             scene->addItem(block);
             return;
         }
     }
-    GridBlock *block = new GridBlock(fileName,{},{}, 120, 60, gridSize);
+    GridBlock *block = new GridBlock(fileName, {}, {}, gridSize);
     block->setPos(x, y);
 
     scene->addItem(block);
 }
 
-void SchematicViewer::dragEnterEvent(QDragEnterEvent *event) {
-    // if (event->mimeData()->hasUrls())
-    // {
-        event->acceptProposedAction();
-        qDebug() << "dhdfhfdhdhdf    " ;
-
-    // }
-    // if (event->mimeData()->hasText()) {
-        QString text = event->mimeData()->text();
-    // QMessageBox::information(this,"ffffff","From drag");
-
-    qDebug() << "ffffff    " <<text ;
-    // }
-}
-
-void SchematicViewer::dragLeaveEvent(QDragLeaveEvent *event)
+void SchematicViewer::dragEnterEvent(QDragEnterEvent *event)
 {
-    // if (event->mimeData()->hasUrls())
-    //     event->acceptProposedAction();
+    try
+    {
+        if (event->mimeData()->hasUrls())  // checks if the drag contains file URLs (e.g., the user is dragging C:/schematics/alu.v).
+            event->acceptProposedAction(); // Without calling this, Qt won’t allow dropping.
+    }
+    catch (const std::exception &e)
+    {
+        qCritical() << "Error:" << e.what();
 
-    // // if (event->mimeData()->hasText()) {
-    // QString text = event->mimeData()->text();
-    // // QMessageBox::information(this,"ffffff","From drag");
-
-    // qDebug() << "dddddddd\n";
-    // }
-}
-
-void SchematicViewer::dragMoveEvent(QDragMoveEvent *event)
-{
-    if (event->mimeData()->hasText()) {
-        event->acceptProposedAction();  // MUST call this
-    } else {
-        event->ignore();
-    }if (event->mimeData()->hasText()) {
-        event->acceptProposedAction();  // MUST call this
-    } else {
-        event->ignore();
+        QMessageBox::critical(this, "Error", e.what());
     }
 }
 
-
-
-void SchematicViewer::dropEvent(QDropEvent *event) {
-    foreach (const QUrl &url, event->mimeData()->urls()) {
-        QString filePath = url.toLocalFile();
-        if (!filePath.isEmpty()) {
-            // Map drop position to scene coordinates
-            QPointF scenePos = mapToScene(event->position().toPoint());
-            openFile(filePath, scenePos);
+void SchematicViewer::dropEvent(QDropEvent *event)
+{
+    try
+    {
+        foreach (const QUrl &url, event->mimeData()->urls())
+        {
+            QString filePath = url.toLocalFile();
+            if (!filePath.isEmpty())
+            {
+                // Map drop position to scene coordinates
+                QPointF scenePos = mapToScene(event->position().toPoint());
+                openFile(filePath, scenePos);
+            }
         }
-        if (event->mimeData()->hasText()) {
-            QString text = event->mimeData()->text();  // 👈 dragged item text
-            qDebug() << "Dropped item text:" << text;
-        }
-        // if (event->mimeData()->hasText()) {
-        //     QString text = event->mimeData()->text();
-
-        // }
     }
-    QMessageBox::information(this,"ffffff","From drop");
+    catch (const std::exception &e)
+    {
+        qCritical() << "Error:" << e.what();
+
+        QMessageBox::critical(this, "Error", e.what());
+    }
 }
 
-void SchematicViewer::wheelEvent(QWheelEvent *event) {
+void SchematicViewer::wheelEvent(QWheelEvent *event)
+{
     const double scaleFactor = 1.15;
     if (event->angleDelta().y() > 0)
         scale(scaleFactor, scaleFactor);
@@ -306,7 +105,8 @@ void SchematicViewer::wheelEvent(QWheelEvent *event) {
         scale(1.0 / scaleFactor, 1.0 / scaleFactor);
 }
 
-void SchematicViewer::drawBackground(QPainter *painter, const QRectF &rect) {
+void SchematicViewer::drawBackground(QPainter *painter, const QRectF &rect)
+{
     const int gridSize = 20;
     const int dotSize = 2;
 
@@ -314,26 +114,48 @@ void SchematicViewer::drawBackground(QPainter *painter, const QRectF &rect) {
     painter->setBrush(QColor(180, 180, 180));
 
     qreal left = std::floor(rect.left() / gridSize) * gridSize;
-    qreal top  = std::floor(rect.top()  / gridSize) * gridSize;
+    qreal top = std::floor(rect.top() / gridSize) * gridSize;
 
-    for (qreal x = left; x < rect.right(); x += gridSize) {
-        for (qreal y = top; y < rect.bottom(); y += gridSize) {
+    for (qreal x = left; x < rect.right(); x += gridSize)
+    {
+        for (qreal y = top; y < rect.bottom(); y += gridSize)
+        {
             painter->drawEllipse(QPointF(x, y), dotSize / 2.0, dotSize / 2.0);
         }
     }
 }
-void SchematicViewer::keyPressEvent(QKeyEvent *event) {
-    if (event->key() == Qt::Key_Delete) {
-        QList<QGraphicsItem*> selectedItems = scene->selectedItems();
-        for (QGraphicsItem *item : selectedItems) {
-            Wire *wire = dynamic_cast<Wire*>(item);
-            if (wire) {
-                scene->removeItem(wire);
-                delete wire;
+void SchematicViewer::keyPressEvent(QKeyEvent *event)
+{
+    try
+    {
+        if (event->key() == Qt::Key_Delete)
+        {
+            QList<QGraphicsItem *> selectedItems = scene->selectedItems();
+            for (QGraphicsItem *item : selectedItems)
+            {
+                Wire *wire = dynamic_cast<Wire *>(item);
+                if (wire)
+                {
+                    scene->removeItem(wire);
+                    delete wire;
+                }
+                else if (GridBlock *block = dynamic_cast<GridBlock *>(item))
+                {
+                    scene->removeItem(block);
+                    delete block; // this will clean up its wires too
+                }
             }
         }
-    } else {
-        // Call base class for other keys
-        QGraphicsView::keyPressEvent(event);
+        else
+        {
+            // Call base class for other keys
+            QGraphicsView::keyPressEvent(event);
+        }
+    }
+    catch (const std::exception &e)
+    {
+        qCritical() << "Error:" << e.what();
+
+        QMessageBox::critical(this, "Error", e.what());
     }
 }

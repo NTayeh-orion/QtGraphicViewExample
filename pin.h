@@ -1,32 +1,21 @@
 #ifndef PIN_H
 #define PIN_H
-
 #include <QGraphicsEllipseItem>
 #include <QGraphicsLineItem>
 #include <QGraphicsSceneMouseEvent>
 #include <QPen>
+class Wire; // forward declaration
 
-class Pin;
-
-class Wire : public QGraphicsPathItem  {
+class Pin : public QGraphicsEllipseItem
+{
 public:
-    Wire(Pin *startPin, QGraphicsItem *parent = nullptr);
+    enum Direction
+    {
+        Input,
+        Output
+    };
 
-    void setEndPin(Pin *endPin);
-    // void updatePosition();
-    void updatePath(const QPointF &mousePos = QPointF());
-
-
-private:
-    Pin *startPin;
-    Pin *endPin = nullptr;
-};
-
-class Pin : public QGraphicsEllipseItem {
-public:
-    enum Direction { Input, Output };
-
-    Pin(Direction dir, const QString &name, int bitIndex = 0 , QGraphicsItem *parent = nullptr);
+    Pin(Direction dir, const QString &name, int bitIndex = 0, QGraphicsItem *parent = nullptr);
 
     int bitIndex() const { return m_bitIndex; }
 
@@ -34,6 +23,8 @@ public:
     void addWire(Wire *wire);
     Direction direction() const { return dir; }
     QString name() const { return pinName; }
+    void removeWire(Wire *wire);
+    QList<Wire *> getWires() const { return wires; }
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
@@ -41,12 +32,11 @@ protected:
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
 
-
 private:
     int m_bitIndex = 0;
     Direction dir;
     QString pinName;
-    QList<Wire*> wires;
+    QList<Wire *> wires;
     Wire *tempWire = nullptr;
 };
 #endif // PIN_H
