@@ -1,11 +1,12 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QListWidgetItem>
 #include <QMainWindow>
 #include <QMessageBox>
-#include <QListWidgetItem>
 #include <QProcess>
 #include <QSysInfo>
+#include <qboxlayout.h>
 
 #include "schematicviewer.h"
 QT_BEGIN_NAMESPACE
@@ -29,20 +30,19 @@ private slots:
 
     void on_lineEdit_textChanged(const QString &arg1);
 
-    void on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
-
-    void on_listWidget_itemActivated(QListWidgetItem *item);
-
     void on_actionopen_Dir_triggered();
 
 
 private:
     Ui::MainWindow *ui;
     SchematicViewer *schematicViewer;
+
     QString dirPath;
     QStringList filesToList;
-    QWidget *terminalTab;
     QString currentPath;
     QString currentFilePath;
+
+    QVBoxLayout listWidgetLayout;
+    QVBoxLayout listEmbededLibLayout;
 };
 #endif // MAINWINDOW_H

@@ -11,4 +11,8 @@
         <file>imgsAndFiles/google-docs.png</file>
         <file>imgsAndFiles/word.png</file>
     </qresource>
+    <qresource prefix="/lib">
+        <file>test_lib/and_gate.v</file>
+        <file>test_lib/example.v</file>
+    </qresource>
 </RCC>

@@ -44,13 +44,14 @@ void SchematicViewer::openFile(const QString &filePath, QPointF dropPos)
             }
             GridBlock *block = new GridBlock(module.name, inputs, outputs, gridSize);
             block->setPos(x, y);
+            block->blockFilePath = filePath;
             scene->addItem(block);
             return;
         }
     }
     GridBlock *block = new GridBlock(fileName, {}, {}, gridSize);
     block->setPos(x, y);
-
+    block->blockFilePath = filePath;
     scene->addItem(block);
 }
 
@@ -204,8 +205,17 @@ void SchematicViewer::dropEvent(QDropEvent *event)
             // Fallback: use display text and try to find the file
             QString displayText = currentPath + "/" + roleDataMap.value(Qt::DisplayRole).toString();
             QPointF scenePos = mapToScene(event->position().toPoint());
+
+            // connect(scene, &QGraphicsScene::selectionChanged, this, [=]() {
+            //     for (QGraphicsItem *item : scene->selectedItems()) {
+            //         if (dynamic_cast<QGraphicsRectItem *>(item)) {
+            //             QMessageBox::information(this, "Clicked", "Rectangle clicked!");
+            //         }
+            //     }
+            // });
+
             openFile(displayText, scenePos);
-            qDebug() << "No file path found, using display text:" << displayText;
+            // qDebug() << "No file path found, using display text:" << displayText;
             // handleDisplayText(displayText, dropPos);
             // }
         }

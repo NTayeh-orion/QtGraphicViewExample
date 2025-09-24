@@ -1,6 +1,5 @@
 #ifndef GRIDBLOCK_H
 #define GRIDBLOCK_H
-#include "pin.h"
 #include <QBrush>
 #include <QFont>
 #include <QGraphicsRectItem>
@@ -8,7 +7,11 @@
 #include <QGraphicsTextItem>
 #include <QMessageBox>
 #include <QPen>
+#include <QProcess>
 #include <QRegularExpression>
+#include "block_view_form.h"
+#include "codehighlighter.h"
+#include "pin.h"
 #include <cmath>
 class ResizeHandle;
 
@@ -19,11 +22,12 @@ public:
               const QStringList &inputs,
               const QStringList &outputs,
               int gridSize);
-
+    QString blockFilePath;
     ~GridBlock();
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
+    void mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event) override;
 
 private:
     int gridSize;
@@ -31,7 +35,7 @@ private:
     QStringList outputs;
     QList<Pin*> pins;
     ResizeHandle* handle;
-
+    BlockViewForm *viewForm;
     // Count total pins (expanding buses like a[3:0] into 4 pins)
     int expandCount(const QStringList &ports);
 

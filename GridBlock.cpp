@@ -1,8 +1,10 @@
 #include "gridblock.h"
-#include "pin.h"
-#include "wire.h"
-#include <QGraphicsScene> // <-- add this
 #include <QGraphicsDropShadowEffect>
+#include <QGraphicsScene> // <-- add this
+#include "pin.h"
+#include "ui_block_view_form.h"
+#include "wire.h"
+#include <qfileinfo.h>
 GridBlock::GridBlock(const QString &text,
                      const QStringList &inputs,
                      const QStringList &outputs,
@@ -61,6 +63,8 @@ GridBlock::GridBlock(const QString &text,
 
     // ---------- 5. Add output pins (right side) ----------
     addPins(outputs, Pin::Output, pinSpacing, rect().right());
+
+    viewForm = new BlockViewForm();
 }
 GridBlock::~GridBlock()
 {
@@ -95,6 +99,23 @@ QVariant GridBlock::itemChange(GraphicsItemChange change, const QVariant &value)
         QMessageBox::information(nullptr, "Error", e.what());
     }
     return value;
+}
+
+void GridBlock::mouseDoubleClickEvent(QGraphicsSceneMouseEvent *event)
+{
+    QFile file(blockFilePath);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::warning(nullptr, "Error", "Cannot open file: " + blockFilePath);
+        return;
+    }
+
+    QTextStream in(&file);
+    QString content = in.readAll(); // read the whole file
+    file.close();
+    CodeHighlighter *highlighter = new CodeHighlighter(viewForm->ui->textEdit->document());
+
+    viewForm->ui->textEdit->setPlainText(content); // display in QTextEdit
+    viewForm->show();
 }
 
 int GridBlock::expandCount(const QStringList &ports)
