@@ -135,7 +135,8 @@ void MainWindow::on_actionopen_Dir_triggered() {
 
     if (!dirPath.isEmpty())
     {
-
+        currentPath = dirPath;
+        schematicViewer->currentPath =dirPath;
         QPointF center = schematicViewer->mapToScene(schematicViewer->viewport()->rect().center());
         schematicViewer->openFile(dirPath, center);
 
@@ -158,3 +159,4 @@ void MainWindow::on_actionopen_Dir_triggered() {
         }
     }
 }
+

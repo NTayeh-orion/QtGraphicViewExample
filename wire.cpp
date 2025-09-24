@@ -4,7 +4,12 @@ Wire::Wire(Pin *startPin, QGraphicsItem *parent)
     : QGraphicsPathItem(parent)
     , startPin(startPin)
 {
-    setPen(QPen(Qt::red, 2));
+    QPen wirePen(QColor(255, 128, 0)); // orange
+    wirePen.setWidth(2);
+    wirePen.setCapStyle(Qt::RoundCap);
+    wirePen.setJoinStyle(Qt::RoundJoin);
+    setPen(wirePen);
+    // setPen(QPen(Qt::red, 2));
     setFlag(QGraphicsItem::ItemIsSelectable); // allow selection
     setFlag(QGraphicsItem::ItemIsFocusable);
     updatePath();

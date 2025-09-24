@@ -35,11 +35,14 @@ private slots:
 
     void on_actionopen_Dir_triggered();
 
+
 private:
     Ui::MainWindow *ui;
     SchematicViewer *schematicViewer;
     QString dirPath;
     QStringList filesToList;
     QWidget *terminalTab;
+    QString currentPath;
+    QString currentFilePath;
 };
 #endif // MAINWINDOW_H

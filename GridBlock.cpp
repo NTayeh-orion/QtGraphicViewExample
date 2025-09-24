@@ -2,7 +2,7 @@
 #include "pin.h"
 #include "wire.h"
 #include <QGraphicsScene> // <-- add this
-
+#include <QGraphicsDropShadowEffect>
 GridBlock::GridBlock(const QString &text,
                      const QStringList &inputs,
                      const QStringList &outputs,
@@ -10,8 +10,23 @@ GridBlock::GridBlock(const QString &text,
     : QGraphicsRectItem()
     , gridSize(gridSize)
 {
-    setBrush(QBrush(Qt::lightGray));
-    setPen(QPen(Qt::black));
+    QLinearGradient gradient(0, 0, 0, rect().height());
+    gradient.setColorAt(0, QColor(30, 30, 40));   // dark blue top
+    gradient.setColorAt(1, QColor(20, 20, 25));   // darker bottom
+    setBrush(QBrush(gradient));
+    // setBrush(QBrush(Qt::lightGray));
+
+    QPen pen(QColor(0, 255, 255)); // cyan
+    pen.setWidth(2);
+    setPen(pen);
+    // setPen(QPen(Qt::black));
+
+    QGraphicsDropShadowEffect *glow = new QGraphicsDropShadowEffect;
+    glow->setBlurRadius(25);
+    glow->setColor(QColor(0, 255, 255, 150));
+    glow->setOffset(0, 0);
+    setGraphicsEffect(glow);
+
     setFlags(QGraphicsItem::ItemIsMovable | QGraphicsItem::ItemIsSelectable
              | QGraphicsItem::ItemSendsGeometryChanges);
     setAcceptedMouseButtons(Qt::LeftButton);
@@ -33,10 +48,14 @@ GridBlock::GridBlock(const QString &text,
     setRect(0, 0, width, height);
 
     // ---------- 3. Add label ----------
+    // QGraphicsTextItem *label = new QGraphicsTextItem(text, this);
+    // label->setDefaultTextColor(Qt::blue);
+    // label->setPos(width / 2 - label->boundingRect().width() / 2, -20);
     QGraphicsTextItem *label = new QGraphicsTextItem(text, this);
-    label->setDefaultTextColor(Qt::blue);
-    label->setPos(width / 2 - label->boundingRect().width() / 2, -20);
-
+    QFont font("Consolas", 12, QFont::Bold);
+    label->setFont(font);
+    label->setDefaultTextColor(QColor(0, 200, 255)); // neon blue
+    label->setPos(width / 2 - label->boundingRect().width() / 2, -25);
     // ---------- 4. Add input pins (left side) ----------
     addPins(inputs, Pin::Input, pinSpacing, rect().left());
 
@@ -109,11 +128,20 @@ void GridBlock::addPins(const QStringList &ports, Pin::Direction dir, int spacin
             int step = (msb > lsb) ? -1 : 1;
             for (int bit = msb; bit != lsb + step; bit += step) {
                 Pin *pin = new Pin(dir, baseName + QString("[%1]").arg(bit), bit, this);
+                pin->setBrush(QBrush(QColor(10, 10, 15)));  // dark pin background
+                QPen pinPen(QColor(0, 255, 180));           // neon green outline
+                pinPen.setWidth(2);
+                pin->setPen(pinPen);
+
                 pin->setPos(x, 20 + pinIndex * spacing);
                 pinIndex++;
             }
         } else {
             Pin *pin = new Pin(dir, port, 0, this);
+            pin->setBrush(QBrush(QColor(10, 10, 15)));  // dark pin background
+            QPen pinPen(QColor(0, 255, 180));           // neon green outline
+            pinPen.setWidth(2);
+            pin->setPen(pinPen);
             pin->setPos(x, 20 + pinIndex * spacing);
             pinIndex++;
         }

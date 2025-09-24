@@ -15,6 +15,8 @@ class SchematicViewer : public QGraphicsView
 public:
     explicit SchematicViewer(QWidget *parent = nullptr);
     void openFile(const QString &filePath, QPointF dropPos);
+    QString currentPath;
+
 
 protected:
     void dragEnterEvent(QDragEnterEvent *event) override;
