@@ -64,7 +64,10 @@ GridBlock::GridBlock(const QString &text,
 }
 GridBlock::~GridBlock()
 {
+    qDebug() << " inside destructor ";
+    qDebug() << this->childItems();
     for (QGraphicsItem *child : this->childItems()) {
+
         Pin *pin = dynamic_cast<Pin *>(child);
         if (pin) {
             // Make a copy of the wire list because it will change as we delete

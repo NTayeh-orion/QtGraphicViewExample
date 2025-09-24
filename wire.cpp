@@ -24,7 +24,6 @@ Wire::~Wire()
 {
     disconnectPins();
 }
-
 void Wire::disconnectPins()
 {
     if (startPin) {
@@ -57,3 +56,6 @@ void Wire::updatePath(const QPointF &mousePos)
         QMessageBox::information(nullptr, "Error", e.what());
     }
 }
+
+
+

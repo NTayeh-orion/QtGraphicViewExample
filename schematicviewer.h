@@ -24,7 +24,8 @@ protected:
     void dropEvent(QDropEvent *event) override;
     void wheelEvent(QWheelEvent *event) override;
     void drawBackground(QPainter *painter, const QRectF &rect) override; // 👈 grid
-    void keyPressEvent(QKeyEvent *event) override;                       // override the key press event
+    void keyPressEvent(QKeyEvent *event) override;
+    void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) ;   // override the key press event
 
 private:
     QGraphicsScene *scene;
