@@ -27,19 +27,20 @@ MainWindow::MainWindow(QWidget *parent)
     ui->stopLabel->setPixmap(stopIcon.scaled(30, 30, Qt::KeepAspectRatio));
     ui->searchLabel->setPixmap(searchIcon.scaled(30, 30, Qt::KeepAspectRatio));
 
-    terminalTab = new QWidget();
+    QDir dir(":/lib/test_lib");
+    schematicViewer->currentPath = ":/lib/test_lib";
+    filesToList = dir.entryList(QDir::Files);
 
-    // QProcess *proc = new QProcess(terminalTab);
+    // Clear previous items
+    ui->listWidget->clear();
 
-// #ifdef Q_OS_WIN
-//     // Windows → launch cmd.exe (but no -into support)
-//     proc->start("cmd.exe");
-// #elif defined(Q_OS_LINUX) || defined(Q_OS_MACOS)
-//     // Linux/Mac → embed xterm into the widget
-//     proc->start("xterm", {"-into", QString::number(container->winId())});
-// #endif
+    // Add files to QListWidget
+    for (const QString &file : filesToList) {
+        QIcon icon(":/imgs/imgsAndFiles/google-docs.png"); // your icon resource or file path
+        QListWidgetItem *item = new QListWidgetItem(icon, file);
 
-    // ui->terminalTabWidget->addTab(terminalTab, "Terminal");
+        ui->listWidget->addItem(item); // only name
+    }
 }
 
 MainWindow::~MainWindow()
@@ -49,44 +50,18 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionOpen_File_triggered()
 {
-    // QString dirPath = QFileDialog::getExistingDirectory(
-    //     this,
-    //     tr("Open Schematic File"),
-    //     QDir::currentPath(),
-    //     QFileDialog::ShowDirsOnly              // option: only show directories
-    //         | QFileDialog::DontResolveSymlinks // optional
-    // );
 
-    QString filePath = QFileDialog::getOpenFileName(
-        this,
-        tr("Open Schematic File"),
-        QDir::homePath(),
-        tr("Schematic Files (*.json *.xml *.netlist);;All Files (*)")
-        );
+    QString filePath
+        = QFileDialog::getOpenFileName(this,
+                                       tr("Open Schematic File"),
+                                       QDir::homePath(),
+                                       tr("Schematic Files (*.v *.sv);;All Files (*)"));
 
     if (!filePath.isEmpty())
     {
 
         QPointF center = schematicViewer->mapToScene(schematicViewer->viewport()->rect().center());
         schematicViewer->openFile(filePath, center);
-
-        QDir dir(filePath);
-
-        // Get all files (not directories)
-        filesToList = dir.entryList(QDir::Files);
-
-        // Clear previous items
-        ui->listWidget->clear();
-
-        // Add files to QListWidget
-        for (const QString &file : filesToList)
-        {
-
-            QIcon icon(":/imgs/imgsAndFiles/google-docs.png"); // your icon resource or file path
-            QListWidgetItem *item = new QListWidgetItem(icon, file);
-
-            ui->listWidget->addItem(item); // only name
-        }
     }
 }
 
@@ -113,15 +88,6 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
     }
 }
 
-void MainWindow::on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
-{
-}
-
-void MainWindow::on_listWidget_itemActivated(QListWidgetItem *item)
-{
-    QMessageBox::information(this, "ffd", item->text());
-}
-
 void MainWindow::on_actionopen_Dir_triggered() {
     QString dirPath = QFileDialog::getExistingDirectory(
         this,
@@ -137,8 +103,6 @@ void MainWindow::on_actionopen_Dir_triggered() {
     {
         currentPath = dirPath;
         schematicViewer->currentPath =dirPath;
-        QPointF center = schematicViewer->mapToScene(schematicViewer->viewport()->rect().center());
-        schematicViewer->openFile(dirPath, center);
 
         QDir dir(dirPath);
 
