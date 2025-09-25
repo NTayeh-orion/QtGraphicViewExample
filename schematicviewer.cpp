@@ -269,7 +269,7 @@ void SchematicViewer::keyPressEvent(QKeyEvent *event)
                     delete wire;
                 } else if (GridBlock *block = dynamic_cast<GridBlock *>(item)) {
 
-                    // scene->removeItem(block); cause an exception
+                     // scene->removeItem(block); //cause an exception
                     delete block; // this will clean up its wires too
                 }
             }
