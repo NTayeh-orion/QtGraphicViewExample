@@ -3,6 +3,7 @@
 #include <QGraphicsScene>
 #include <QMessageBox>
 #include "wire.h"
+#include <qpainter.h>
 
 // ---------------- Pin ----------------
 
@@ -112,3 +113,41 @@ void Pin::removeWire(Wire *wire)
 {
     wires.removeAll(wire);
 }
+
+
+
+void Pin::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
+{
+    m_hovered = true;
+    update(); // trigger repaint
+    QGraphicsItem::hoverEnterEvent(event);
+}
+
+void Pin::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
+{
+    m_hovered = false;
+    update(); // trigger repaint
+    QGraphicsItem::hoverLeaveEvent(event);
+}
+
+
+// void Pin::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+// {
+//     // QColor fillColor;
+
+//     // if (dir == Input) {
+//     //     fillColor = m_hovered ? QColor(0, 180, 255)   // bright cyan when hovered
+//     //                           : QColor(20, 20, 20);   // dark gray when idle
+//     // } else {
+//     //     fillColor = m_hovered ? QColor(255, 140, 60)  // bright orange when hovered
+//     //                           : QColor(30, 20, 30);   // dark purple-gray when idle
+//     // }
+
+//     // painter->setPen(QPen(Qt::black, m_hovered ? 3 : 2)); // thicker outline on hover
+//     // painter->setBrush(QBrush(fillColor));
+
+//     // if (dir == Input)
+//     //     painter->drawRect(m_rect);   // square for input
+//     // else
+//     //     painter->drawEllipse(m_rect); // circle for output
+// }

@@ -3,8 +3,11 @@
 #include <QGraphicsScene> // <-- add this
 #include "pin.h"
 #include "ui_block_view_form.h"
+#include "verilogparser.h"
 #include "wire.h"
+#include <algorithm> // for std::max
 #include <qfileinfo.h>
+using namespace std;
 GridBlock::GridBlock(const QString &text,
                      const QStringList &inputs,
                      const QStringList &outputs,
@@ -13,8 +16,8 @@ GridBlock::GridBlock(const QString &text,
     , gridSize(gridSize)
 {
     QLinearGradient gradient(0, 0, 0, rect().height());
-    gradient.setColorAt(0, QColor(30, 30, 40));   // dark blue top
-    gradient.setColorAt(1, QColor(20, 20, 25));   // darker bottom
+    gradient.setColorAt(0, QColor(30, 30, 40)); // dark blue top
+    gradient.setColorAt(1, QColor(20, 20, 25)); // darker bottom
     setBrush(QBrush(gradient));
     // setBrush(QBrush(Qt::lightGray));
 
@@ -42,10 +45,28 @@ GridBlock::GridBlock(const QString &text,
     int minHeight = 60;  // minimum block height
     int height = std::max(minHeight, maxPins * pinSpacing + 20);
 
-    // ---------- 2. Compute width based on label length ----------
+    // Compute width based on the **longest port name** and block label
+    auto maxPortLength = [](const QStringList &ports) {
+        int maxLen = 0;
+        for (QString p : ports) {
+            maxLen = std::max(maxLen,  static_cast<int>(p.length()));
+        }
+        return maxLen;
+    };
+
+    // // ---------- 2. Compute width based on label length ----------
+    // int baseWidth = 120;
+    // int textWidth = text.size() * 8; // rough estimate (8px per char)
+    // int width = std::max(baseWidth, textWidth + 40);
+    int maxInputLen = maxPortLength(inputs);
+    int maxOutputLen = maxPortLength(outputs);
+
+    // estimate space for pin names (8px per char) + margin
+    int pinNameWidth = std::max(maxInputLen, maxOutputLen) * 8 + 20;
+
+    int textWidth = text.size() * 8 + 40; // block label width
     int baseWidth = 120;
-    int textWidth = text.size() * 8; // rough estimate (8px per char)
-    int width = std::max(baseWidth, textWidth + 40);
+    int width = std::max({baseWidth, textWidth, pinNameWidth * 2}); // left + right pins
 
     setRect(0, 0, width, height);
 
@@ -61,7 +82,7 @@ GridBlock::GridBlock(const QString &text,
     // ---------- 4. Add input pins (left side) ----------
     addPins(inputs, Pin::Input, pinSpacing, rect().left());
 
-    // ---------- 5. Add output pins (right side) ----------
+    // ---------- 5. Add output pins (right side) --------
     addPins(outputs, Pin::Output, pinSpacing, rect().right());
 
     viewForm = new BlockViewForm();
@@ -71,7 +92,6 @@ GridBlock::~GridBlock()
     qDebug() << " inside destructor ";
     qDebug() << this->childItems();
     for (QGraphicsItem *child : this->childItems()) {
-
         Pin *pin = dynamic_cast<Pin *>(child);
         if (pin) {
             // Make a copy of the wire list because it will change as we delete
@@ -152,8 +172,8 @@ void GridBlock::addPins(const QStringList &ports, Pin::Direction dir, int spacin
             int step = (msb > lsb) ? -1 : 1;
             for (int bit = msb; bit != lsb + step; bit += step) {
                 Pin *pin = new Pin(dir, baseName + QString("[%1]").arg(bit), bit, this);
-                pin->setBrush(QBrush(QColor(10, 10, 15)));  // dark pin background
-                QPen pinPen(QColor(0, 255, 180));           // neon green outline
+                pin->setBrush(QBrush(QColor(10, 10, 15))); // dark pin background
+                QPen pinPen(QColor(0, 255, 180));          // neon green outline
                 pinPen.setWidth(2);
                 pin->setPen(pinPen);
 
@@ -162,10 +182,24 @@ void GridBlock::addPins(const QStringList &ports, Pin::Direction dir, int spacin
             }
         } else {
             Pin *pin = new Pin(dir, port, 0, this);
-            pin->setBrush(QBrush(QColor(10, 10, 15)));  // dark pin background
-            QPen pinPen(QColor(0, 255, 180));           // neon green outline
-            pinPen.setWidth(2);
-            pin->setPen(pinPen);
+            if(dir == Pin::Input)
+            {
+                pin->setBrush(QBrush(QColor(20, 20, 20)));     // darker fill
+                QPen inputPen(QColor(0, 200, 255));            // cyan outline
+                inputPen.setWidth(2);
+                pin->setPen(inputPen);
+            }
+            else
+            {
+                pin->setBrush(QBrush(QColor(30, 20, 30)));     // slightly lighter fill
+                QPen outputPen(QColor(255, 100, 0));           // orange outline
+                outputPen.setWidth(2);
+                pin->setPen(outputPen);
+            }
+            // pin->setBrush(QBrush(QColor(10, 10, 15))); // dark pin background
+            // QPen pinPen(QColor(0, 255, 180));          // neon green outline
+            // pinPen.setWidth(2);
+            // pin->setPen(pinPen);
             pin->setPos(x, 20 + pinIndex * spacing);
             pinIndex++;
         }
