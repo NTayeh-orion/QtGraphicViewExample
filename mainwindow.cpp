@@ -1,26 +1,29 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
-
+#include <QFileDialog>
+#include <QDebug>
+#include <csignal>
+#include <cstdlib>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     setWindowTitle("Schematic Viewer");
 
-    //configure the GraphicView
+    // configure the GraphicView
     schematicViewer = new SchematicViewer(this);
     ui->graphicViewFrame->setAcceptDrops(false);
     ui->graphicViewFrame->layout()->addWidget(schematicViewer);
     ui->searchLineEdit->setPlaceholderText(" Search files... ");
 
-    //Set the window icones
+    // Set the window icones
     QPixmap logoIcon(":/imgs/imgsAndFiles/mainLogo.png");
     QPixmap nextIcon(":/imgs/imgsAndFiles/next.png");
     QPixmap pouseIcon(":/imgs/imgsAndFiles/pause.png");
     QPixmap stopIcon(":/imgs/imgsAndFiles/pause-button.png");
     QPixmap searchIcon(":/imgs/imgsAndFiles/loupe.png");
 
-    //Set the window icones size
+    // Set the window icones size
     ui->topLogoIconeLabel->setPixmap(logoIcon.scaled(50, 50, Qt::KeepAspectRatio));
     ui->nextLabel->setPixmap(nextIcon.scaled(30, 30, Qt::KeepAspectRatio));
     ui->pouseLabel->setPixmap(pouseIcon.scaled(30, 30, Qt::KeepAspectRatio));
@@ -45,7 +48,8 @@ MainWindow::MainWindow(QWidget *parent)
     libExplorerModel->appendRow(parentItem);
 
     // Add files to tree
-    for (const QString &file : filesToList) {
+    for (const QString &file : filesToList)
+    {
         QIcon icon(":/imgs/imgsAndFiles/google-docs.png"); // your icon resource or file path
         QStandardItem *child = new QStandardItem(file);
         child->setIcon(icon);
@@ -63,11 +67,10 @@ MainWindow::~MainWindow()
 void MainWindow::on_actionOpen_File_triggered()
 {
     // get the file path for the choosen file
-    QString filePath
-        = QFileDialog::getOpenFileName(this,
-                                       tr("Open Schematic File"),
-                                       QDir::homePath(),
-                                       tr("Schematic Files (*.v *.sv);;All Files (*)"));
+    QString filePath = QFileDialog::getOpenFileName(this,
+                                                    tr("Open Schematic File"),
+                                                    QDir::homePath(),
+                                                    tr("Schematic Files (*.v *.sv);;All Files (*)"));
 
     if (!filePath.isEmpty())
     {
@@ -84,8 +87,9 @@ void MainWindow::on_actionExit_triggered()
 }
 
 // slot for open directory menu item
-void MainWindow::on_actionopen_Dir_triggered() {
-    //store the path for the chosen directory
+void MainWindow::on_actionopen_Dir_triggered()
+{
+    // store the path for the chosen directory
     QString dirPath = QFileDialog::getExistingDirectory(
         this,
         tr("Open Schematic File"),
@@ -94,9 +98,10 @@ void MainWindow::on_actionopen_Dir_triggered() {
             | QFileDialog::DontResolveSymlinks // optional
     );
 
-    if (!dirPath.isEmpty()) {
+    if (!dirPath.isEmpty())
+    {
         currentPath = dirPath;
-        schematicViewer->currentPath =dirPath;
+        schematicViewer->currentPath = dirPath;
 
         QDir dir(dirPath);
 
@@ -114,7 +119,8 @@ void MainWindow::on_actionopen_Dir_triggered() {
         libExplorerModel->appendRow(parentItem);
 
         // Add files to tree
-        for (const QString &file : filesToList) {
+        for (const QString &file : filesToList)
+        {
             QIcon icon(":/imgs/imgsAndFiles/google-docs.png"); // your icon resource or file path
             QStandardItem *child = new QStandardItem(file);
             child->setIcon(icon);
@@ -123,7 +129,7 @@ void MainWindow::on_actionopen_Dir_triggered() {
     }
 }
 
-//slot to the search through the Lib Expolorer
+// slot to the search through the Lib Expolorer
 void MainWindow::on_searchLineEdit_textChanged(const QString &arg1)
 {
     proxy->setFilterFixedString(arg1);

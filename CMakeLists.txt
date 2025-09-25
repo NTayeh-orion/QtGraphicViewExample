@@ -39,7 +39,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         GridBlock.cpp
         block_view_form.h block_view_form.cpp block_view_form.ui
         codehighlighter.h codehighlighter.cpp
-        childFilterProxyModel.h childFilterProxyModel.cpp
+        crashhandler.h crashhandler.cpp
 
 
     )

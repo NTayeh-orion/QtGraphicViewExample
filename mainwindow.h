@@ -27,6 +27,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+
 private slots:
     void on_actionOpen_File_triggered(); // slot to handle the open file menue item
 

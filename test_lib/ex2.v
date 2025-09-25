@@ -1,4 +1,10 @@
-module ALU20 (input clk, input rst_n, input alu_en, input carry_in, input cmp_signed, input   [3:0] alu_op, input   [4:0] shamt, input   [WIDTH-1:0] src_a, input src_b, input imm_val,output  [WIDTH-1:0] alu_result, output debug_bus, output  zero_flag, output carry_flag, output ovf_flag, output neg_flag, output cmp_result, output  [7:0] status_code, output  valid_out, output busy);
+module ALU20 (
+    input clk, input rst_n, 
+    input alu_en, input carry_in, input cmp_signed, input   [3:0] alu_op, input   [4:0] shamt, input   
+    [WIDTH-1:0] src_a, input src_b, input imm_val,output  [WIDTH-1:0] alu_result, output debug_bus, 
+    output  zero_flag, output carry_flag, output ovf_flag, output neg_flag, output cmp_result, 
+    output  [7:0] status_code, output  valid_out, output busy
+    );
  
     // Internal signals
     logic [WIDTH:0] add_sub_tmp;

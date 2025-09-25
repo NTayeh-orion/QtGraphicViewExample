@@ -53,10 +53,14 @@ void SchematicViewer::openFile(const QString &filePath, QPointF dropPos)
             return;
         }
     }
-    GridBlock *block = new GridBlock(fileName, {}, {}, gridSize);
-    block->setPos(x, y);
-    block->blockFilePath = filePath;
-    scene->addItem(block);
+    else
+    {
+        GridBlock *block = new GridBlock(fileName, {}, {}, gridSize);
+        block->setPos(x, y);
+        block->blockFilePath = filePath;
+        scene->addItem(block);
+
+    }
 }
 
 void SchematicViewer::dragEnterEvent(QDragEnterEvent *event)
@@ -269,7 +273,7 @@ void SchematicViewer::keyPressEvent(QKeyEvent *event)
                     delete wire;
                 } else if (GridBlock *block = dynamic_cast<GridBlock *>(item)) {
 
-                    // scene->removeItem(block); cause an exception
+                     // scene->removeItem(block); //cause an exception
                     delete block; // this will clean up its wires too
                 }
             }
