@@ -24,18 +24,22 @@ SchematicViewer::SchematicViewer(QWidget *parent)
 
 void SchematicViewer::openFile(const QString &filePath, QPointF dropPos)
 {
+    qDebug() << " inside open file " ;
     QFileInfo fileInfo(filePath);
     QString fileName = fileInfo.fileName();
+    qDebug() << "filename = " + fileName;
 
     // Snap drop position to grid
     const int gridSize = 20;
     qreal x = std::round(dropPos.x() / gridSize) * gridSize;
     qreal y = std::round(dropPos.y() / gridSize) * gridSize;
-
+    qDebug() << fileInfo.suffix().toLower();
     if (fileInfo.suffix().toLower() == "v") {
         ModuleInfo module = parseVerilogModule(filePath);
+        qDebug() << module.name ;
         if (!module.name.isEmpty()) {
             QStringList inputs, outputs;
+            qDebug() <<  "size ============ " +module.ports.size();
             for (const Port &p : module.ports) {
                 if (p.dir == "input")
                     inputs.append(p.name);
@@ -256,6 +260,7 @@ void SchematicViewer::keyPressEvent(QKeyEvent *event)
 {
     try {
         if (event->key() == Qt::Key_Delete) {
+            qDebug() << " inside key delete " ;
             QList<QGraphicsItem *> selectedItems = scene->selectedItems();
             for (QGraphicsItem *item : selectedItems) {
                 Wire *wire = dynamic_cast<Wire *>(item);
@@ -263,7 +268,8 @@ void SchematicViewer::keyPressEvent(QKeyEvent *event)
                     scene->removeItem(wire);
                     delete wire;
                 } else if (GridBlock *block = dynamic_cast<GridBlock *>(item)) {
-                    scene->removeItem(block);
+
+                    // scene->removeItem(block); cause an exception
                     delete block; // this will clean up its wires too
                 }
             }

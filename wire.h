@@ -5,6 +5,8 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QMessageBox>
 #include <QPen>
+#include <QVector>
+#include <QPointF>
 class Pin; // forward declaration
 
 class Wire : public QGraphicsPathItem
@@ -18,6 +20,7 @@ public:
 
     ~Wire(); // destructor
     void disconnectPins();
+
 
 private:
     Pin *startPin;
