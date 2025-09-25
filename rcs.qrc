@@ -10,6 +10,7 @@
         <file>imgsAndFiles/google-docs.png</file>
         <file>imgsAndFiles/word.png</file>
         <file>imgsAndFiles/mainLogo.png</file>
+        <file>imgsAndFiles/books.png</file>
     </qresource>
     <qresource prefix="/lib">
         <file>test_lib/and_gate.v</file>

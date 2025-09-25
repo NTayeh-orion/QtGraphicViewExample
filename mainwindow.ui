@@ -300,7 +300,7 @@
                     <property name="frameShadow">
                      <enum>QFrame::Shadow::Raised</enum>
                     </property>
-                    <layout class="QHBoxLayout" name="horizontalLayout_8">
+                    <layout class="QHBoxLayout" name="horizontalLayout">
                      <item>
                       <widget class="QLabel" name="searchLabel">
                        <property name="text">
@@ -322,7 +322,7 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QListWidget" name="listWidget">
+                   <widget class="QTreeWidget" name="treeWidget">
                     <property name="font">
                      <font>
                       <pointsize>12</pointsize>
@@ -337,6 +337,14 @@
                     <property name="defaultDropAction">
                      <enum>Qt::DropAction::CopyAction</enum>
                     </property>
+                    <attribute name="headerVisible">
+                     <bool>false</bool>
+                    </attribute>
+                    <column>
+                     <property name="text">
+                      <string notr="true">1</string>
+                     </property>
+                    </column>
                    </widget>
                   </item>
                  </layout>

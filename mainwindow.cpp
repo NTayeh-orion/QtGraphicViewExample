@@ -30,15 +30,18 @@ MainWindow::MainWindow(QWidget *parent)
     schematicViewer->currentPath = ":/lib/test_lib";
     filesToList = dir.entryList(QDir::Files);
 
-    // Clear previous items
-    ui->listWidget->clear();
+    QIcon icon(":/imgs/imgsAndFiles/books.png");
+    QTreeWidgetItem *parentItem = new QTreeWidgetItem(ui->treeWidget);
+    parentItem->setText(0, "Embeded");
+    parentItem->setIcon(0, icon);
+    parentItem->setFlags(parentItem->flags() & ~Qt::ItemIsDragEnabled); // ❌ disable dragging
 
     // Add files to QListWidget
     for (const QString &file : filesToList) {
         QIcon icon(":/imgs/imgsAndFiles/google-docs.png"); // your icon resource or file path
-        QListWidgetItem *item = new QListWidgetItem(icon, file);
-
-        ui->listWidget->addItem(item); // only name
+        QTreeWidgetItem *child = new QTreeWidgetItem(parentItem);
+        child->setText(0, file);
+        child->setIcon(0, icon);
     }
 }
 
@@ -71,20 +74,20 @@ void MainWindow::on_actionExit_triggered()
 
 void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 {
-    ui->listWidget->clear();
-    if (!filesToList.empty())
-    {
-        for (const QString &file : filesToList)
-        {
-            if (file.contains(arg1, Qt::CaseInsensitive))
-            {
-                QIcon icon(":/imgs/imgsAndFiles/google-docs.png"); // your icon resource or file path
-                QListWidgetItem *item = new QListWidgetItem(icon, file);
+    // ui->listWidget->clear();
+    // if (!filesToList.empty())
+    // {
+    //     for (const QString &file : filesToList)
+    //     {
+    //         if (file.contains(arg1, Qt::CaseInsensitive))
+    //         {
+    //             QIcon icon(":/imgs/imgsAndFiles/google-docs.png"); // your icon resource or file path
+    //             QListWidgetItem *item = new QListWidgetItem(icon, file);
 
-                ui->listWidget->addItem(item); // only name
-            }
-        }
-    }
+    //             ui->listWidget->addItem(item); // only name
+    //         }
+    //     }
+    // }
 }
 
 void MainWindow::on_actionopen_Dir_triggered() {
@@ -108,17 +111,22 @@ void MainWindow::on_actionopen_Dir_triggered() {
         // Get all files (not directories)
         filesToList = dir.entryList(QDir::Files);
 
-        // Clear previous items
-        ui->listWidget->clear();
+        QFileInfo info(dirPath);
+
+        QString dirName = info.fileName();
+
+        QIcon icon(":/imgs/imgsAndFiles/books.png");
+        QTreeWidgetItem *parentItem = new QTreeWidgetItem(ui->treeWidget);
+        parentItem->setText(0, dirName);
+        parentItem->setIcon(0, icon);
+        parentItem->setFlags(parentItem->flags() & ~Qt::ItemIsDragEnabled); // ❌ disable dragging
 
         // Add files to QListWidget
-        for (const QString &file : filesToList)
-        {
-
+        for (const QString &file : filesToList) {
             QIcon icon(":/imgs/imgsAndFiles/google-docs.png"); // your icon resource or file path
-            QListWidgetItem *item = new QListWidgetItem(icon, file);
-
-            ui->listWidget->addItem(item); // only name
+            QTreeWidgetItem *child = new QTreeWidgetItem(parentItem);
+            child->setText(0, file);
+            child->setIcon(0, icon);
         }
     }
 }
