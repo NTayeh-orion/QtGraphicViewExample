@@ -14,16 +14,15 @@ MainWindow::MainWindow(QWidget *parent)
     ui->graphicViewFrame->layout()->addWidget(schematicViewer);
     ui->lineEdit->setPlaceholderText(" Search files... ");
 
-    // resize(800, 600);
     setWindowTitle("Schematic Viewer");
 
-    QPixmap logoIcon(":/imgs/imgsAndFiles/shortcut.png");
+    QPixmap logoIcon(":/imgs/imgsAndFiles/mainLogo.png");
     QPixmap nextIcon(":/imgs/imgsAndFiles/next.png");
     QPixmap pouseIcon(":/imgs/imgsAndFiles/pause.png");
     QPixmap stopIcon(":/imgs/imgsAndFiles/pause-button.png");
     QPixmap searchIcon(":/imgs/imgsAndFiles/loupe.png");
 
-    ui->topLogoIconeLabel->setPixmap(logoIcon.scaled(40, 40, Qt::KeepAspectRatio));
+    ui->topLogoIconeLabel->setPixmap(logoIcon.scaled(50, 50, Qt::KeepAspectRatio));
     ui->nextLabel->setPixmap(nextIcon.scaled(30, 30, Qt::KeepAspectRatio));
     ui->pouseLabel->setPixmap(pouseIcon.scaled(30, 30, Qt::KeepAspectRatio));
     ui->stopLabel->setPixmap(stopIcon.scaled(30, 30, Qt::KeepAspectRatio));

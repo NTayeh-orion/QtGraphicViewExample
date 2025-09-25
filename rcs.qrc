@@ -7,9 +7,9 @@
         <file>imgsAndFiles/next.png</file>
         <file>imgsAndFiles/pause.png</file>
         <file>imgsAndFiles/pause-button.png</file>
-        <file>imgsAndFiles/shortcut.png</file>
         <file>imgsAndFiles/google-docs.png</file>
         <file>imgsAndFiles/word.png</file>
+        <file>imgsAndFiles/mainLogo.png</file>
     </qresource>
     <qresource prefix="/lib">
         <file>test_lib/and_gate.v</file>
