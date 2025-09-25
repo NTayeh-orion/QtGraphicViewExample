@@ -53,10 +53,14 @@ void SchematicViewer::openFile(const QString &filePath, QPointF dropPos)
             return;
         }
     }
-    GridBlock *block = new GridBlock(fileName, {}, {}, gridSize);
-    block->setPos(x, y);
-    block->blockFilePath = filePath;
-    scene->addItem(block);
+    else
+    {
+        GridBlock *block = new GridBlock(fileName, {}, {}, gridSize);
+        block->setPos(x, y);
+        block->blockFilePath = filePath;
+        scene->addItem(block);
+
+    }
 }
 
 void SchematicViewer::dragEnterEvent(QDragEnterEvent *event)
