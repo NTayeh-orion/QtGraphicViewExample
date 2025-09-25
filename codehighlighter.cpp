@@ -10,6 +10,8 @@ CodeHighlighter::CodeHighlighter(QTextDocument *parent)
     highlightingRules.append(
         {QRegularExpression("\\b(class|int|float|if|else|while|for|return)\\b"), keywordFormat});
 
+    keywordPattern = "\\b(" + svKeywords.join("|") + ")\\b";
+    highlightingRules.append({QRegularExpression(keywordPattern), keywordFormat});
     // Strings
     QTextCharFormat stringFormat;
     stringFormat.setForeground(Qt::green);
@@ -19,10 +21,6 @@ CodeHighlighter::CodeHighlighter(QTextDocument *parent)
     QTextCharFormat commentFormat;
     commentFormat.setForeground(Qt::gray);
     highlightingRules.append({QRegularExpression("//[^\n]*"), commentFormat});
-
-    highlightingRules.append(
-        {QRegularExpression("\\b(module|endmodule|input|output|wire|reg|assign|always)\\b"),
-         keywordFormat});
 
     // Numbers like [3:0] or 32'd10
     QTextCharFormat numberFormat;

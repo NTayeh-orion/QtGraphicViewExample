@@ -1,14 +1,12 @@
 <RCC>
     <qresource prefix="/imgs">
         <file>imgsAndFiles/button.png</file>
-        <file>imgsAndFiles/diskette.png</file>
         <file>imgsAndFiles/folder.png</file>
         <file>imgsAndFiles/loupe.png</file>
         <file>imgsAndFiles/next.png</file>
         <file>imgsAndFiles/pause.png</file>
         <file>imgsAndFiles/pause-button.png</file>
         <file>imgsAndFiles/google-docs.png</file>
-        <file>imgsAndFiles/word.png</file>
         <file>imgsAndFiles/mainLogo.png</file>
         <file>imgsAndFiles/books.png</file>
     </qresource>

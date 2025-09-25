@@ -1,13 +1,17 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QFileDialog>
 #include <QListWidgetItem>
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QProcess>
+#include <QSortFilterProxyModel>
+#include <QStandardItemModel>
 #include <QSysInfo>
 #include <qboxlayout.h>
 
+#include "childFilterProxyModel.h"
 #include "schematicviewer.h"
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -24,14 +28,14 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_actionOpen_File_triggered();
+    void on_actionOpen_File_triggered(); // slot to handle the open file menue item
 
-    void on_actionExit_triggered();
+    void on_actionExit_triggered(); // slot to handle the exit menue item
 
-    void on_lineEdit_textChanged(const QString &arg1);
+    void on_actionopen_Dir_triggered(); // slot to handle the open directory menue item
 
-    void on_actionopen_Dir_triggered();
-
+    void on_searchLineEdit_textChanged(
+        const QString &arg1); // slot to handle the text change for the search lineEdit
 
 private:
     Ui::MainWindow *ui;
@@ -42,7 +46,7 @@ private:
     QString currentPath;
     QString currentFilePath;
 
-    QVBoxLayout listWidgetLayout;
-    QVBoxLayout listEmbededLibLayout;
+    QStandardItemModel *libExplorerModel;
+    ChildFilterProxyModel *proxy;
 };
 #endif // MAINWINDOW_H

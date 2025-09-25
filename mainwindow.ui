@@ -309,12 +309,17 @@
                       </widget>
                      </item>
                      <item>
-                      <widget class="QLineEdit" name="lineEdit">
+                      <widget class="QLineEdit" name="searchLineEdit">
                        <property name="minimumSize">
                         <size>
                          <width>0</width>
                          <height>30</height>
                         </size>
+                       </property>
+                       <property name="font">
+                        <font>
+                         <pointsize>12</pointsize>
+                        </font>
                        </property>
                       </widget>
                      </item>
@@ -322,11 +327,14 @@
                    </widget>
                   </item>
                   <item>
-                   <widget class="QTreeWidget" name="treeWidget">
+                   <widget class="QTreeView" name="treeView">
                     <property name="font">
                      <font>
                       <pointsize>12</pointsize>
                      </font>
+                    </property>
+                    <property name="editTriggers">
+                     <set>QAbstractItemView::EditTrigger::NoEditTriggers</set>
                     </property>
                     <property name="dragEnabled">
                      <bool>true</bool>
@@ -340,11 +348,6 @@
                     <attribute name="headerVisible">
                      <bool>false</bool>
                     </attribute>
-                    <column>
-                     <property name="text">
-                      <string notr="true">1</string>
-                     </property>
-                    </column>
                    </widget>
                   </item>
                  </layout>
@@ -355,6 +358,11 @@
                    <width>700</width>
                    <height>0</height>
                   </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <pointsize>9</pointsize>
+                  </font>
                  </property>
                  <property name="acceptDrops">
                   <bool>false</bool>
@@ -526,7 +534,7 @@ color: rgb(255, 255, 255);
   <action name="actionOpen_File">
    <property name="icon">
     <iconset resource="rcs.qrc">
-     <normaloff>:/imgs/imgsAndFiles/word.png</normaloff>:/imgs/imgsAndFiles/word.png</iconset>
+     <normaloff>:/imgs/imgsAndFiles/google-docs.png</normaloff>:/imgs/imgsAndFiles/google-docs.png</iconset>
    </property>
    <property name="text">
     <string>Open File</string>
