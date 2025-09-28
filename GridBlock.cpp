@@ -172,30 +172,30 @@ void GridBlock::addPins(const QStringList &ports, Pin::Direction dir, int spacin
             int step = (msb > lsb) ? -1 : 1;
             for (int bit = msb; bit != lsb + step; bit += step) {
                 Pin *pin = new Pin(dir, baseName + QString("[%1]").arg(bit), bit, this);
-                pin->setBrush(QBrush(QColor(10, 10, 15))); // dark pin background
-                QPen pinPen(QColor(0, 255, 180));          // neon green outline
-                pinPen.setWidth(2);
-                pin->setPen(pinPen);
+                // pin->setBrush(QBrush(QColor(10, 10, 15))); // dark pin background
+                // QPen pinPen(QColor(0, 255, 180));          // neon green outline
+                // pinPen.setWidth(2);
+                // pin->setPen(pinPen);
 
                 pin->setPos(x, 20 + pinIndex * spacing);
                 pinIndex++;
             }
         } else {
             Pin *pin = new Pin(dir, port, 0, this);
-            if(dir == Pin::Input)
-            {
-                pin->setBrush(QBrush(QColor(20, 20, 20)));     // darker fill
-                QPen inputPen(QColor(0, 200, 255));            // cyan outline
-                inputPen.setWidth(2);
-                pin->setPen(inputPen);
-            }
-            else
-            {
-                pin->setBrush(QBrush(QColor(30, 20, 30)));     // slightly lighter fill
-                QPen outputPen(QColor(255, 100, 0));           // orange outline
-                outputPen.setWidth(2);
-                pin->setPen(outputPen);
-            }
+            // if(dir == Pin::Input)
+            // {
+                // pin->setBrush(QBrush(QColor(20, 20, 20)));     // darker fill
+            //     QPen inputPen(QColor(0, 200, 255));            // cyan outline
+            //     inputPen.setWidth(2);
+            //     pin->setPen(inputPen);
+            // }
+            // else
+            // {
+            //     pin->setBrush(QBrush(QColor(30, 20, 30)));     // slightly lighter fill
+            //     QPen outputPen(QColor(255, 100, 0));           // orange outline
+            //     outputPen.setWidth(2);
+            //     pin->setPen(outputPen);
+            // }
             // pin->setBrush(QBrush(QColor(10, 10, 15))); // dark pin background
             // QPen pinPen(QColor(0, 255, 180));          // neon green outline
             // pinPen.setWidth(2);

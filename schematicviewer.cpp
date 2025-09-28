@@ -269,7 +269,7 @@ void SchematicViewer::keyPressEvent(QKeyEvent *event)
             for (QGraphicsItem *item : selectedItems) {
                 Wire *wire = dynamic_cast<Wire *>(item);
                 if (wire) {
-                    scene->removeItem(wire);
+                    // scene->removeItem(wire);
                     delete wire;
                 } else if (GridBlock *block = dynamic_cast<GridBlock *>(item)) {
 
