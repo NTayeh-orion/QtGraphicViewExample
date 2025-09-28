@@ -6,7 +6,7 @@
 #include <QPen>
 class Wire; // forward declaration
 
-class Pin : public QGraphicsEllipseItem
+class Pin : public QGraphicsObject
 {
 public:
     enum Direction
@@ -25,15 +25,16 @@ public:
     QString name() const { return pinName; }
     void removeWire(Wire *wire);
     QList<Wire *> getWires() const { return wires; }
-    void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
-    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
+    QRectF boundingRect() const override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event) override;
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event) override;
     QVariant itemChange(GraphicsItemChange change, const QVariant &value) override;
-    // void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)override;
+    void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
+    void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
 
 private:
     int m_bitIndex = 0;
@@ -42,6 +43,8 @@ private:
     QList<Wire *> wires;
     Wire *tempWire = nullptr;
     bool m_hovered = false;
+
+    QRectF m_rect;
 
 };
 #endif // PIN_H

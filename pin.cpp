@@ -4,17 +4,21 @@
 #include <QMessageBox>
 #include "wire.h"
 #include <qpainter.h>
+#include <QPropertyAnimation>
 
 // ---------------- Pin ----------------
 
 Pin::Pin(Direction dir, const QString &name, int bitIndex, QGraphicsItem *parent)
-    : QGraphicsEllipseItem(parent), dir(dir), pinName(name), m_bitIndex(bitIndex)
+    : QGraphicsObject(parent)
+    , dir(dir)
+    , pinName(name)
+    , m_bitIndex(bitIndex)
 {
-    // setRect(-5, -5, 10, 10);  // small circle
-    setRect(-7, -7, 14, 14);
+    // setRect(-7, -7, 14, 14);
+    m_rect = QRectF(-7, -7, 14, 14);
     // setZValue(1); // higher than the block
 
-    setBrush(dir == Input ? Qt::red : Qt::green);
+    // setBrush(dir == Input ? Qt::red : Qt::green);
     setFlag(QGraphicsItem::ItemSendsScenePositionChanges);
     setFlag(QGraphicsItem::ItemIsSelectable);
 
@@ -31,51 +35,53 @@ Pin::Pin(Direction dir, const QString &name, int bitIndex, QGraphicsItem *parent
         // label->setPos(-label->boundingRect().width() - 15, -8);
         label->setPos(-label->boundingRect().width() - 15, -8 + bitIndex * 12);
 }
+QRectF Pin::boundingRect() const
+{
+    return m_rect;
+}
 
 QPointF Pin::connectionPoint() const
 {
-    return mapToScene(rect().center());
+    // return mapToScene(rect().center());
+    return mapToScene(m_rect.center());
 }
 
 void Pin::addWire(Wire *wire)
 {
-    if (!wires.contains(wire))
-    {
+    if (!wires.contains(wire)) {
         wires.append(wire);
     }
 }
 
 void Pin::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (event->button() == Qt::LeftButton)
-    {
+    if (event->button() == Qt::LeftButton) {
         tempWire = new Wire(this);
         scene()->addItem(tempWire);
-        tempWire->updatePath(mapToScene(rect().center()));
+        // tempWire->updatePath(mapToScene(rect().center()));
+        tempWire->updatePath(mapToScene(m_rect.center()));
 
         event->accept();
     }
-    QGraphicsEllipseItem::mousePressEvent(event);
+    // QGraphicsEllipseItem::mousePressEvent(event);
+    QGraphicsItem::mousePressEvent(event);
 }
 void Pin::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (tempWire)
-    {
+    if (tempWire) {
         tempWire->updatePath(event->scenePos());
     }
-    QGraphicsEllipseItem::mouseMoveEvent(event);
+    // QGraphicsEllipseItem::mouseMoveEvent(event);
+    QGraphicsItem::mouseMoveEvent(event);
 }
 
 void Pin::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    if (tempWire && event->button() == Qt::LeftButton)
-    {
+    if (tempWire && event->button() == Qt::LeftButton) {
         QList<QGraphicsItem *> itemsAtPos = scene()->items(event->scenePos());
-        for (auto *item : itemsAtPos)
-        {
+        for (auto *item : itemsAtPos) {
             Pin *otherPin = dynamic_cast<Pin *>(item);
-            if (otherPin && otherPin != this)
-            {
+            if (otherPin && otherPin != this) {
                 tempWire->setEndPin(otherPin);
                 this->addWire(tempWire);
                 otherPin->addWire(tempWire);
@@ -87,23 +93,22 @@ void Pin::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         delete tempWire;
         tempWire = nullptr;
     }
-    QGraphicsEllipseItem::mouseReleaseEvent(event);
+    // QGraphicsEllipseItem::mouseReleaseEvent(event);
+    QGraphicsItem::mouseReleaseEvent(event);
 }
 QVariant Pin::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-    try
-    {
-        if ((change == QGraphicsItem::ItemPositionChange || change == QGraphicsItem::ItemScenePositionHasChanged) && !wires.isEmpty())
-        {
-            for (Wire *wire : wires)
-            {
+    try {
+        if ((change == QGraphicsItem::ItemPositionChange
+             || change == QGraphicsItem::ItemScenePositionHasChanged)
+            && !wires.isEmpty()) {
+            for (Wire *wire : wires) {
                 wire->updatePath();
             }
         }
-        return QGraphicsEllipseItem::itemChange(change, value);
-    }
-    catch (const std::exception &e)
-    {
+        // return QGraphicsEllipseItem::itemChange(change, value);
+        return QGraphicsItem::itemChange(change, value);
+    } catch (const std::exception &e) {
         qCritical() << "Error:" << e.what();
 
         QMessageBox::critical(nullptr, "Error", e.what());
@@ -114,12 +119,17 @@ void Pin::removeWire(Wire *wire)
     wires.removeAll(wire);
 }
 
-
-
 void Pin::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
     m_hovered = true;
     update(); // trigger repaint
+    // small scale-up animation
+    QPropertyAnimation *anim = new QPropertyAnimation(this, "scale");
+    anim->setDuration(120);
+    anim->setStartValue(scale());
+    anim->setEndValue(1.2);  // enlarge 20%
+    anim->setEasingCurve(QEasingCurve::OutQuad);
+    anim->start(QAbstractAnimation::DeleteWhenStopped);
     QGraphicsItem::hoverEnterEvent(event);
 }
 
@@ -127,27 +137,51 @@ void Pin::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
     m_hovered = false;
     update(); // trigger repaint
+
+    // scale back to normal
+    QPropertyAnimation *anim = new QPropertyAnimation(this, "scale");
+    anim->setDuration(120);
+    anim->setStartValue(scale());
+    anim->setEndValue(1.0);
+    anim->setEasingCurve(QEasingCurve::OutQuad);
+    anim->start(QAbstractAnimation::DeleteWhenStopped);
     QGraphicsItem::hoverLeaveEvent(event);
 }
 
+void Pin::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+{
+    QColor fillColor;
+    QPen dynamicPen;
+    qDebug() << "inside paint method ";
+    if (dir == Input) {
+        // QPen inputPen(QColor(0, 200, 255)); // cyan outline
+        dynamicPen.setColor(QColor(0, 200, 255));
+        dynamicPen.setWidth(m_hovered ? 3 : 2);
+        // painter->setPen(inputPen);
 
-// void Pin::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
-// {
-//     // QColor fillColor;
+        painter->setBrush(QBrush(QColor(20, 20, 20))); // dark gray fill
+        painter->drawRect(m_rect);
+        fillColor = m_hovered ? QColor(0, 180, 255)   // bright cyan when hovered
+                              : QColor(20, 20, 20);   // dark gray when idle
+    } else {
+        // draw circle for output
+        // QPen outputPen(QColor(255, 100, 0)); // orange outline
+        dynamicPen.setColor(QColor(255, 100, 0));
+        dynamicPen.setWidth(m_hovered ? 3 : 2);
+        // painter->setPen(outputPen);
 
-//     // if (dir == Input) {
-//     //     fillColor = m_hovered ? QColor(0, 180, 255)   // bright cyan when hovered
-//     //                           : QColor(20, 20, 20);   // dark gray when idle
-//     // } else {
-//     //     fillColor = m_hovered ? QColor(255, 140, 60)  // bright orange when hovered
-//     //                           : QColor(30, 20, 30);   // dark purple-gray when idle
-//     // }
+        painter->setBrush(QBrush(QColor(30, 20, 30))); // darker fill
+        painter->drawEllipse(m_rect);
 
-//     // painter->setPen(QPen(Qt::black, m_hovered ? 3 : 2)); // thicker outline on hover
-//     // painter->setBrush(QBrush(fillColor));
+        fillColor = m_hovered ? QColor(255, 140, 60)  // bright orange when hovered
+                              : QColor(30, 20, 30);   // dark purple-gray when idle
+    }
 
-//     // if (dir == Input)
-//     //     painter->drawRect(m_rect);   // square for input
-//     // else
-//     //     painter->drawEllipse(m_rect); // circle for output
-// }
+    painter->setPen(dynamicPen); // thicker outline on hover
+    painter->setBrush(QBrush(fillColor));
+
+    if (dir == Input)
+        painter->drawRect(m_rect);   // square for input
+    else
+        painter->drawEllipse(m_rect); // circle for output
+}
