@@ -42,6 +42,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         crashhandler.h crashhandler.cpp
         childFilterProxyModel.h
         childFilterProxyModel.cpp
+        TreeViewItemWithPath.h TreeViewItemWithPath.cpp
+
 
 
     )

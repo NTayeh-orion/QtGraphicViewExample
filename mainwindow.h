@@ -11,6 +11,7 @@
 #include <QSysInfo>
 #include <qboxlayout.h>
 
+#include "TreeViewItemWithPath.h"
 #include "childFilterProxyModel.h"
 #include "schematicviewer.h"
 QT_BEGIN_NAMESPACE
@@ -38,7 +39,11 @@ private slots:
     void on_searchLineEdit_textChanged(
         const QString &arg1); // slot to handle the text change for the search lineEdit
 
+    void on_treeView_pressed(const QModelIndex &index);
+
 private:
+    void addEmbededLib(QString path);
+
     Ui::MainWindow *ui;
     SchematicViewer *schematicViewer;
 
