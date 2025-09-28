@@ -217,3 +217,18 @@ void Wire::setGlowStrength(qreal value)
     m_glowStrength = value;
     update();
 }
+
+
+QPainterPath Wire::shape() const
+{
+    QPainterPathStroker stroker;
+    stroker.setWidth(m_penWidth + 10); // make it thick enough to hover easily
+    return stroker.createStroke(m_path);
+}
+
+QRectF Wire::boundingRect() const
+{
+    // Add some margin so pen width and glow are inside
+    qreal extra = m_penWidth / 2 + 6;
+    return m_path.boundingRect().adjusted(-extra, -extra, extra, extra);
+}

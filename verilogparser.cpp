@@ -48,6 +48,30 @@ ModuleInfo parseVerilogModule(const QString &filePath)
     QString text = QTextStream(&file).readAll();
     file.close();
 
+    // First, extract parameters before removing them
+    QMap<QString, QString> parameters; // Store parameter names and values
+
+    // Regex to extract parameters
+    QRegularExpression paramRe(R"(#\s*\(([^)]*)\))", QRegularExpression::DotMatchesEverythingOption);
+    QRegularExpressionMatch paramMatch = paramRe.match(text);
+    qDebug() << "praam = " << paramMatch.captured(1);
+    if (paramMatch.hasMatch()) {
+        QString paramBlock = paramMatch.captured(1);
+        QRegularExpression singleParamRe(R"(\bparameter\s+(\w+)\s*=\s*([^,]+))", QRegularExpression::CaseInsensitiveOption);
+
+        QRegularExpressionMatchIterator it = singleParamRe.globalMatch(paramBlock);
+        while (it.hasNext()) {
+            QRegularExpressionMatch match = it.next();
+            QString paramName = match.captured(1);
+            QString paramValue = match.captured(2).trimmed();
+            parameters[paramName] = paramValue;
+            qDebug() << "Found parameter:" << paramName << "=" << paramValue;
+        }
+    }
+
+    // Now remove parameter block from text
+    text.replace(paramRe, "");
+
     // 1. Extract module name
     QRegularExpression moduleRe(R"(module\s+(\w+))");
     QRegularExpressionMatch m = moduleRe.match(text);
