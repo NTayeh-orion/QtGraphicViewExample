@@ -32,12 +32,14 @@ public:
         m_penWidth = w;
         update();
     }
-    QRectF boundingRect() const override { return m_path.boundingRect(); }
+    QRectF boundingRect() const override;
+    // { return m_path.boundingRect(); }
 
     ~Wire(); // destructor
     void disconnectPins();
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
+    QPainterPath shape() const override;
 
 protected:
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *) override;
