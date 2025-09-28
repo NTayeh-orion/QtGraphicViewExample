@@ -1,0 +1,1 @@
+module barrel_shifter_8bit (input [7:0] din, input [2:0] shift_amt, input right_en, left_en, output reg [7:0] dout); always @(*) begin if (right_en && \!left_en) dout = din >> shift_amt; else if (left_en && \!right_en) dout = din << shift_amt; else dout = din; end endmodule

@@ -10,6 +10,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     setWindowTitle("Schematic Viewer");
 
+    QFile file(":/QSS/headerStyle.qss"); // or "style.qss" if in local folder
+    if (file.open(QFile::ReadOnly)) {
+        QString style = file.readAll();
+        ui->menubar->setStyleSheet(style);
+        ui->frame_12->setStyleSheet(style);
+    }
+
     // configure the GraphicView
     schematicViewer = new SchematicViewer(this);
     ui->graphicViewFrame->setAcceptDrops(false);
@@ -18,16 +25,10 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Set the window icones
     QPixmap logoIcon(":/imgs/imgsAndFiles/mainLogo.png");
-    QPixmap nextIcon(":/imgs/imgsAndFiles/next.png");
-    QPixmap pouseIcon(":/imgs/imgsAndFiles/pause.png");
-    QPixmap stopIcon(":/imgs/imgsAndFiles/pause-button.png");
     QPixmap searchIcon(":/imgs/imgsAndFiles/loupe.png");
 
     // Set the window icones size
     ui->topLogoIconeLabel->setPixmap(logoIcon.scaled(50, 50, Qt::KeepAspectRatio));
-    ui->nextLabel->setPixmap(nextIcon.scaled(30, 30, Qt::KeepAspectRatio));
-    ui->pouseLabel->setPixmap(pouseIcon.scaled(30, 30, Qt::KeepAspectRatio));
-    ui->stopLabel->setPixmap(stopIcon.scaled(30, 30, Qt::KeepAspectRatio));
     ui->searchLabel->setPixmap(searchIcon.scaled(30, 30, Qt::KeepAspectRatio));
 
     // define the tree model and filter
@@ -36,31 +37,39 @@ MainWindow::MainWindow(QWidget *parent)
     proxy->setSourceModel(libExplorerModel);
     proxy->setFilterCaseSensitivity(Qt::CaseInsensitive);
 
-    // add Embeded files to the lib explorer
-    QDir dir(":/lib/test_lib");
-    schematicViewer->currentPath = ":/lib/test_lib";
-    filesToList = dir.entryList(QDir::Files);
+    QDir dir(":/lib/test_lib/");
+    QStringList directories = dir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
 
-    QIcon icon(":/imgs/imgsAndFiles/books.png");
-    QStandardItem *parentItem = new QStandardItem("Embeded");
-    parentItem->setIcon(icon);
-    parentItem->setFlags(parentItem->flags() & ~Qt::ItemIsDragEnabled);
-    libExplorerModel->appendRow(parentItem);
-
-    // Add files to tree
-    for (const QString &file : filesToList)
-    {
-        QIcon icon(":/imgs/imgsAndFiles/google-docs.png"); // your icon resource or file path
-        QStandardItem *child = new QStandardItem(file);
-        child->setIcon(icon);
-        parentItem->appendRow(child);
+    for (const QString &dire : directories) {
+        addEmbededLib(dire);
     }
+
     ui->treeView->setModel(proxy);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::addEmbededLib(QString path)
+{
+    QDir dir(":/lib/test_lib/" + path);
+    filesToList = dir.entryList(QDir::Files);
+    QIcon icon(":/imgs/imgsAndFiles/books.png");
+    TreeViewItemWithPath *parentItem = new TreeViewItemWithPath(path, ":/lib/test_lib/" + path);
+
+    parentItem->setIcon(icon);
+    parentItem->setFlags(parentItem->flags() & ~Qt::ItemIsDragEnabled);
+    libExplorerModel->appendRow(parentItem);
+
+    // Add files to tree
+    for (const QString &file : filesToList) {
+        QIcon icon(":/imgs/imgsAndFiles/google-docs.png"); // your icon resource or file path
+        TreeViewItemWithPath *child = new TreeViewItemWithPath(file, ":/lib/test_lib/" + path);
+        child->setIcon(icon);
+        parentItem->appendRow(child);
+    }
 }
 
 // slot for open file menu item
@@ -129,8 +138,23 @@ void MainWindow::on_actionopen_Dir_triggered()
     }
 }
 
-// slot to the search through the Lib Expolorer
 void MainWindow::on_searchLineEdit_textChanged(const QString &arg1)
 {
     proxy->setFilterFixedString(arg1);
+}
+
+void MainWindow::on_treeView_pressed(const QModelIndex &index)
+{
+    QAbstractItemModel *model = ui->treeView->model();
+    if (!model) {
+        return;
+    }
+
+    // Get custom data using UserRole
+    QString path = model->data(index, Qt::UserRole).toString();
+
+    if (index.parent().isValid()) { // child item check
+
+        schematicViewer->currentPath = path;
+    }
 }

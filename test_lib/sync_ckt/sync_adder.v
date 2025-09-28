@@ -1,0 +1,1 @@
+module sync_adder #(parameter WIDTH=32) (input clk, rst_n, input [WIDTH-1:0] a, b, input start, output reg [WIDTH-1:0] sum, output reg valid); reg busy; always @(posedge clk or negedge rst_n) if (!rst_n) begin sum <= 0; valid <= 0; busy <= 0; end else if (start && !busy) begin sum <= a + b; valid <= 1; busy <= 1; end else if (valid) valid <= 0; endmodule

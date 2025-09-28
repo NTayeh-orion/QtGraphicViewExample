@@ -13,5 +13,45 @@
     <qresource prefix="/lib">
         <file>test_lib/and_gate.v</file>
         <file>test_lib/example.v</file>
+        <file>test_lib/async_ckt/async_adder.v</file>
+        <file>test_lib/async_ckt/async_mux.v</file>
+        <file>test_lib/async_ckt/async_register.v</file>
+        <file>test_lib/async_ckt/bundled_data.v</file>
+        <file>test_lib/async_ckt/c_element.v</file>
+        <file>test_lib/async_ckt/dual_rail_encoder.v</file>
+        <file>test_lib/busses/apb3_bus.v</file>
+        <file>test_lib/busses/avalon_bus.v</file>
+        <file>test_lib/busses/axi4_lite_bus.v</file>
+        <file>test_lib/busses/simple_bus.v</file>
+        <file>test_lib/busses/wishbone_bus.v</file>
+        <file>test_lib/comb_ckt/and_gate.v</file>
+        <file>test_lib/comb_ckt/barrel_shifter.v</file>
+        <file>test_lib/comb_ckt/comparator.v</file>
+        <file>test_lib/comb_ckt/full_adder.v</file>
+        <file>test_lib/comb_ckt/priority_encoder.v</file>
+        <file>test_lib/interfaces/gpio_interface.v</file>
+        <file>test_lib/interfaces/i2c_interface.v</file>
+        <file>test_lib/interfaces/jtag_interface.v</file>
+        <file>test_lib/interfaces/spi_interface.v</file>
+        <file>test_lib/interfaces/uart_interface.v</file>
+        <file>test_lib/sync_ckt/sync_adder.v</file>
+        <file>test_lib/sync_ckt/sync_counter.v</file>
+        <file>test_lib/sync_ckt/sync_debouncer.v</file>
+        <file>test_lib/sync_ckt/sync_divider.v</file>
+        <file>test_lib/sync_ckt/sync_fifo.v</file>
+        <file>test_lib/sync_ckt/sync_fsm_moore.v</file>
+        <file>test_lib/sync_ckt/sync_multiplier.v</file>
+        <file>test_lib/sync_ckt/sync_ram.v</file>
+        <file>test_lib/sync_ckt/sync_register.v</file>
+        <file>test_lib/sync_ckt/sync_uart_tx.v</file>
+        <file>test_lib/async_adder.v</file>
+        <file>test_lib/async_mux.v</file>
+        <file>test_lib/async_register.v</file>
+        <file>test_lib/bundled_data.v</file>
+        <file>test_lib/c_element.v</file>
+        <file>test_lib/dual_rail_encoder.v</file>
+    </qresource>
+    <qresource prefix="/QSS">
+        <file>headerStyle.qss</file>
     </qresource>
 </RCC>
