@@ -26,9 +26,11 @@ protected:
     void drawBackground(QPainter *painter, const QRectF &rect) override; // 👈 grid
     void keyPressEvent(QKeyEvent *event) override;
     void contextMenuEvent(QGraphicsSceneContextMenuEvent *event) ;   // override the key press event
-
+    // void mousePressEvent(QMouseEvent *event) override;
+    void contextMenuEvent(QContextMenuEvent *event) override;
 private:
     QGraphicsScene *scene;
+    void showContextMenu(const QPoint &globalPos);
 };
 
 #endif // SCHEMATICVIEWER_H

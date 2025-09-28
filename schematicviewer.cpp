@@ -8,6 +8,7 @@
 #include "verilogparser.h"
 #include "wire.h"
 #include <cmath>
+#include <QMenu>
 SchematicViewer::SchematicViewer(QWidget *parent)
     : QGraphicsView(parent)
 {
@@ -20,6 +21,7 @@ SchematicViewer::SchematicViewer(QWidget *parent)
     setTransformationAnchor(QGraphicsView::AnchorUnderMouse);
 
     setAcceptDrops(true);
+
 }
 
 void SchematicViewer::openFile(const QString &filePath, QPointF dropPos)
@@ -286,4 +288,200 @@ void SchematicViewer::keyPressEvent(QKeyEvent *event)
 
         QMessageBox::critical(this, "Error", e.what());
     }
+}
+
+
+// void SchematicViewer::mousePressEvent(QMouseEvent *event)
+// {
+//     if(event->button() == Qt::RightButton)
+//     {
+//         showContextMenu(event->globalPos());
+//     }
+//     else
+//     {
+//         QGraphicsView::mousePressEvent(event); // default handling for left-click
+//     }
+// }
+
+void SchematicViewer::showContextMenu(const QPoint &globalPos)
+{
+    QMenu menu;
+
+    // Check if the right-click is on a QGraphicsItem
+    QGraphicsItem *item = itemAt(mapFromGlobal(globalPos));
+    if(item) {
+        menu.addAction("Edit Item");    // Action for an existing item
+        menu.addAction("Delete Item");
+    } else {
+        menu.addAction("Add Item");     // Action for empty space
+    }
+
+    QAction *selectedAction = menu.exec(globalPos);
+    if(selectedAction) {
+        if(selectedAction->text() == "Edit Item") {
+            // handle edit
+        } else if(selectedAction->text() == "Delete Item") {
+            // handle delete
+        } else if(selectedAction->text() == "Add Item") {
+            // handle add
+        }
+    }
+    // --- Style the menu ---
+    // menu.setStyleSheet(R"(
+    //     QMenu {
+    //         background-color: #1e1e2a;      /* dark background */
+    //         color: #00c8ff;                 /* neon cyan text */
+    //         border: 2px solid #00c8ff;
+    //         border-radius: 6px;
+    //         padding: 5px;
+    //     }
+    //     QMenu::item {
+    //         padding: 8px 25px;
+    //         background-color: transparent;
+    //     }
+    //     QMenu::item:selected {
+    //         background-color: #00c8ff;      /* highlight on hover */
+    //         color: #1e1e2a;
+    //         border-radius: 4px;
+    //     }
+    //     QMenu::separator {
+    //         height: 1px;
+    //         background: #00c8ff;
+    //         margin: 5px 0;
+    //     }
+    // )");
+
+    menu.exec(globalPos);
+}
+void SchematicViewer::contextMenuEvent(QContextMenuEvent *event)
+{
+    // // Map to scene position if needed
+    // QPointF scenePos = mapToScene(event->pos());
+
+    // QMenu menu;
+
+    // QGraphicsItem *item = itemAt(event->pos());
+    // if(item) {
+    //     menu.addAction("Edit Item");
+    //     menu.addAction("Delete Item");
+    // } else {
+    //     menu.addAction("Add Item");
+    // }
+
+    // // Style the menu
+    // menu.setStyleSheet(R"(
+    //     QMenu {
+    //         background-color: #1e1e2a;
+    //         color: #00c8ff;
+    //         border: 2px solid #00c8ff;
+    //         border-radius: 6px;
+    //         padding: 5px;
+    //     }
+    //     QMenu::item {
+    //         padding: 8px 25px;
+    //         background-color: transparent;
+    //     }
+    //     QMenu::item:selected {
+    //         background-color: #00c8ff;
+    //         color: #1e1e2a;
+    //         border-radius: 4px;
+    //     }
+    // )");
+
+    // menu.exec(event->globalPos());
+
+    // event->accept(); // important: stop propagation
+
+
+
+
+
+    // Map to scene position if needed
+    // Map to scene position if needed
+    // Map to scene position if needed
+    // Map to scene position if needed
+    // Map to scene position if needed
+    QPointF scenePos = mapToScene(event->pos());
+
+    QMenu menu;
+    menu.setFixedWidth(165);
+
+    QGraphicsItem *item = itemAt(event->pos());
+    if(item) {
+        menu.addAction("📋 Open Code ");
+        menu.addAction("🔄 Flip ");
+        menu.addSeparator();
+        menu.addAction("📝 Copy");
+        menu.addAction("📤 Paste");
+        menu.addSeparator();
+        menu.addAction("🗑️ Delete");
+        menu.addAction("📝 Info");
+        menu.addAction("🔧 Edit Properties");
+    } else {
+        menu.addAction("➕ Add Component");
+        // menu.addAction("🔌 Add Wire");
+        menu.addAction("📝 Add Note");
+        menu.addSeparator();
+        menu.addAction("📤 Paste");
+        menu.addAction("☰ Select All");
+    }
+
+    // Bright dark theme with cyan accents
+    menu.setStyleSheet(R"(
+        QMenu {
+            background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                      stop:0 rgba(40, 50, 65, 255),
+                                      stop:1 rgba(30, 40, 55, 255));
+            color: #b3e6ff;
+            border: 1.5px solid #00e6ff;
+            border-radius: 6px;
+            padding: 8px;
+            font-family: "Segoe UI", "Arial", sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        QMenu::item {
+            padding: 5px 9px;
+            background: transparent;
+            border-radius: 8px;
+            margin: 2px;
+            border: 1px solid transparent;
+        }
+        QMenu::item:selected {
+            background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                      stop:0 #00e6ff,
+                                      stop:1 #00b8e6);
+            color: #002233;
+            border: 1px solid #00ffff;
+            font-weight: 600;
+        }
+        QMenu::item:hover:!selected {
+            background: rgba(0, 230, 255, 0.2);
+            border: 1px solid rgba(0, 230, 255, 0.4);
+        }
+        QMenu::item:disabled {
+            color: #668899;
+        }
+        QMenu::separator {
+            height: 1px;
+            background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                                      stop:0 transparent,
+                                      stop:0.3 #00e6ff,
+                                      stop:0.7 #00e6ff,
+                                      stop:1 transparent);
+            margin: 7px 12px;
+        }
+    )");
+
+    // Enhanced shadow effect for the entire box
+    QGraphicsDropShadowEffect *shadowEffect = new QGraphicsDropShadowEffect;
+    shadowEffect->setBlurRadius(35);
+    shadowEffect->setColor(QColor(0, 200, 255, 150));
+    shadowEffect->setOffset(0, 8);
+    shadowEffect->setXOffset(0);
+    shadowEffect->setYOffset(8);
+    menu.setGraphicsEffect(shadowEffect);
+
+    menu.exec(event->globalPos());
+    event->accept();
 }
