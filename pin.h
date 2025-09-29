@@ -4,6 +4,8 @@
 #include <QGraphicsLineItem>
 #include <QGraphicsSceneMouseEvent>
 #include <QPen>
+#include "CustomToolTip.h"
+
 class Wire; // forward declaration
 
 class Pin : public QGraphicsObject
@@ -45,6 +47,9 @@ private:
     bool m_hovered = false;
 
     QRectF m_rect;
+
+    CustomToolTip *tooltip;
+
 
 };
 #endif // PIN_H

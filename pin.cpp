@@ -2,10 +2,11 @@
 #include <QDebug>
 #include <QGraphicsScene>
 #include <QMessageBox>
-#include "wire.h"
-#include <qpainter.h>
 #include <QPropertyAnimation>
-
+#include <QToolTip>
+#include "wire.h"
+#include <qgraphicsview.h>
+#include <qpainter.h>
 // ---------------- Pin ----------------
 
 Pin::Pin(Direction dir, const QString &name, int bitIndex, QGraphicsItem *parent)
@@ -130,6 +131,57 @@ void Pin::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
     anim->setEndValue(1.2);  // enlarge 20%
     anim->setEasingCurve(QEasingCurve::OutQuad);
     anim->start(QAbstractAnimation::DeleteWhenStopped);
+
+
+
+    // Show tooltip above the pin
+    // // QPoint globalPos = event->screenPos().toPoint(); // <- use toPoint() from QPointF
+    // QPoint globalPos = mapToScene(m_rect.center()).toPoint();
+    // QString tipText = QString("Pin: %1\nDirection: %2\nBit: %3")
+    //                       .arg(pinName)
+    //                       .arg(dir == Input ? "Input" : "Output")
+    //                       .arg(m_bitIndex);
+    // QToolTip::showText(globalPos, tipText);
+
+    //-----------------------------------------------------------------------------------
+    // Convert pin center → scene → view → global
+    // if (!scene()->views().isEmpty()) {
+    //     QGraphicsView *view = scene()->views().first();
+
+    //     // Pin center in scene
+    //     QPointF scenePos = mapToScene(m_rect.center());
+    //     QPoint viewPos = view->mapFromScene(scenePos);
+    //     QPoint globalPos = view->viewport()->mapToGlobal(viewPos);
+
+    //     // Offset: to the side of the pin, depending on direction
+    //     QPoint offset;
+    //     if (dir == Input)
+    //         offset = QPoint(15, -10);  // slightly right & above
+    //     else
+    //         offset = QPoint(-80, -10); // slightly left & above (enough space for text)
+
+    //     QString tipText = QString("Pin: %1\nDirection: %2\nBit: %3")
+    //                           .arg(pinName)
+    //                           .arg(dir == Input ? "Input" : "Output")
+    //                           .arg(m_bitIndex);
+
+    //     QToolTip::showText(globalPos + offset, tipText, view);
+    // }
+
+
+    // -------------------
+    // if (tooltip == nullptr)
+        tooltip = new CustomToolTip();
+
+    if (scene() && !scene()->views().isEmpty()) {
+        QGraphicsView *view = scene()->views().first();
+        QPointF scenePos = mapToScene(m_rect.center().x(), m_rect.top());
+        tooltip->showText(view, scenePos, QString("Pin: %1\nDirection: %2\nBit: %3")
+                                              .arg(pinName)
+                                              .arg(dir == Input ? "Input" : "Output")
+                                              .arg(32));
+    }
+
     QGraphicsItem::hoverEnterEvent(event);
 }
 
@@ -145,6 +197,10 @@ void Pin::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     anim->setEndValue(1.0);
     anim->setEasingCurve(QEasingCurve::OutQuad);
     anim->start(QAbstractAnimation::DeleteWhenStopped);
+    // Hide tooltip
+    // QToolTip::hideText();
+    // if (tooltip)
+        tooltip->hideSmooth();
     QGraphicsItem::hoverLeaveEvent(event);
 }
 
