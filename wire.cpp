@@ -6,12 +6,6 @@ Wire::Wire(Pin *startPin, QGraphicsItem *parent)
     : QGraphicsObject(parent)
     , startPin(startPin)
 {
-    // QPen wirePen(QColor(255, 128, 0)); // orange
-    // wirePen.setWidth(2);
-    // wirePen.setCapStyle(Qt::RoundCap);
-    // wirePen.setJoinStyle(Qt::RoundJoin);
-    // setPen(wirePen);
-    // setPen(QPen(Qt::red, 2));
 
 
     m_pen.setColor(QColor(255, 128, 0)); // orange default
@@ -77,13 +71,6 @@ void Wire::updatePath(const QPointF &mousePos)
 
 void Wire::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 {
-    // QPen hoverPen = pen();
-    // hoverPen.setColor(Qt::yellow);   // highlight color
-    // hoverPen.setWidth(4);            // thicker
-    // setPen(hoverPen);
-
-    // QGraphicsPathItem::hoverEnterEvent(event);
-
     QPropertyAnimation *anim = new QPropertyAnimation(this, "penWidth");
     anim->setDuration(150);
     anim->setStartValue(m_penWidth);
@@ -96,14 +83,6 @@ void Wire::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
 
 void Wire::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 {
-    // QPen normalPen(QColor(255, 128, 0)); // back to orange
-    // normalPen.setWidth(2);
-    // normalPen.setCapStyle(Qt::RoundCap);
-    // normalPen.setJoinStyle(Qt::RoundJoin);
-    // setPen(normalPen);
-
-    // QGraphicsPathItem::hoverLeaveEvent(event);
-
 
     QPropertyAnimation *anim = new QPropertyAnimation(this, "penWidth");
     anim->setDuration(150);
@@ -117,50 +96,6 @@ void Wire::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
 
 void Wire::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
-    // QPen p(QColor(255, 128, 0));
-    // p.setWidthF(m_penWidth);
-    // p.setCapStyle(Qt::RoundCap);
-    // p.setJoinStyle(Qt::RoundJoin);
-
-    // painter->setPen(p);
-    // // painter->drawPath(path());
-    // painter->drawPath(m_path);
-
-
-
-    // ----------------
-    // QPen pen;
-
-    // if (isSelected()) {
-    //     // Highlighted look
-    //     pen.setColor(QColor(0, 200, 255)); // bright cyan
-    //     pen.setWidthF(m_penWidth + 2);
-
-    //     // Optional: dashed outline to emphasize selection
-    //     pen.setStyle(Qt::DashLine);
-
-    //     // Soft glow effect
-    //     QRadialGradient glowGradient(m_path.pointAtPercent(0.5), 20);
-    //     glowGradient.setColorAt(0.0, QColor(0, 200, 255, 120));
-    //     glowGradient.setColorAt(1.0, QColor(0, 200, 255, 0));
-    //     painter->setBrush(glowGradient);
-    // }
-    // else {
-    //     // Normal (unselected) wire
-    //     pen.setColor(QColor(255, 128, 0)); // orange
-    //     pen.setWidthF(m_penWidth);
-    //     pen.setStyle(Qt::SolidLine);
-    //     painter->setBrush(Qt::NoBrush);
-    // }
-
-    // pen.setCapStyle(Qt::RoundCap);
-    // pen.setJoinStyle(Qt::RoundJoin);
-
-    // painter->setPen(pen);
-    // painter->drawPath(m_path);
-
-
-
     QPen drawPen = m_pen;
 
     // Use the animated pen width
@@ -186,19 +121,6 @@ void Wire::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 
 QVariant Wire::itemChange(GraphicsItemChange change, const QVariant &value)
 {
-    // if (change == QGraphicsItem::ItemSelectedChange) {
-    //     bool selected = value.toBool();
-
-    //     QPropertyAnimation *anim = new QPropertyAnimation(this, "penWidth");
-    //     anim->setDuration(200);
-    //     anim->setEasingCurve(QEasingCurve::OutCubic);
-    //     anim->setStartValue(m_penWidth);
-    //     anim->setEndValue(selected ? 5.0 : 2.0);
-    //     anim->start(QAbstractAnimation::DeleteWhenStopped);
-    // }
-
-    // return QGraphicsObject::itemChange(change, value);
-
     if (change == QGraphicsItem::ItemSelectedChange) {
         bool selected = value.toBool();
 

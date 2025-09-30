@@ -30,10 +30,8 @@ Pin::Pin(Direction dir, const QString &name, int bitIndex, QGraphicsItem *parent
     // Label
     QGraphicsTextItem *label = new QGraphicsTextItem(name, this);
     if (dir == Input)
-        // label->setPos(10, -8);
         label->setPos(10, -8 + bitIndex * 12); // shift each bit
     else
-        // label->setPos(-label->boundingRect().width() - 15, -8);
         label->setPos(-label->boundingRect().width() - 15, -8 + bitIndex * 12);
 }
 QRectF Pin::boundingRect() const
@@ -132,43 +130,6 @@ void Pin::hoverEnterEvent(QGraphicsSceneHoverEvent *event)
     anim->setEasingCurve(QEasingCurve::OutQuad);
     anim->start(QAbstractAnimation::DeleteWhenStopped);
 
-
-
-    // Show tooltip above the pin
-    // // QPoint globalPos = event->screenPos().toPoint(); // <- use toPoint() from QPointF
-    // QPoint globalPos = mapToScene(m_rect.center()).toPoint();
-    // QString tipText = QString("Pin: %1\nDirection: %2\nBit: %3")
-    //                       .arg(pinName)
-    //                       .arg(dir == Input ? "Input" : "Output")
-    //                       .arg(m_bitIndex);
-    // QToolTip::showText(globalPos, tipText);
-
-    //-----------------------------------------------------------------------------------
-    // Convert pin center → scene → view → global
-    // if (!scene()->views().isEmpty()) {
-    //     QGraphicsView *view = scene()->views().first();
-
-    //     // Pin center in scene
-    //     QPointF scenePos = mapToScene(m_rect.center());
-    //     QPoint viewPos = view->mapFromScene(scenePos);
-    //     QPoint globalPos = view->viewport()->mapToGlobal(viewPos);
-
-    //     // Offset: to the side of the pin, depending on direction
-    //     QPoint offset;
-    //     if (dir == Input)
-    //         offset = QPoint(15, -10);  // slightly right & above
-    //     else
-    //         offset = QPoint(-80, -10); // slightly left & above (enough space for text)
-
-    //     QString tipText = QString("Pin: %1\nDirection: %2\nBit: %3")
-    //                           .arg(pinName)
-    //                           .arg(dir == Input ? "Input" : "Output")
-    //                           .arg(m_bitIndex);
-
-    //     QToolTip::showText(globalPos + offset, tipText, view);
-    // }
-
-
     // -------------------
     // if (tooltip == nullptr)
         tooltip = new CustomToolTip();
@@ -201,6 +162,7 @@ void Pin::hoverLeaveEvent(QGraphicsSceneHoverEvent *event)
     // QToolTip::hideText();
     // if (tooltip)
         tooltip->hideSmooth();
+    delete tooltip;
     QGraphicsItem::hoverLeaveEvent(event);
 }
 
@@ -213,18 +175,14 @@ void Pin::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
         // QPen inputPen(QColor(0, 200, 255)); // cyan outline
         dynamicPen.setColor(QColor(0, 200, 255));
         dynamicPen.setWidth(m_hovered ? 3 : 2);
-        // painter->setPen(inputPen);
-
         painter->setBrush(QBrush(QColor(20, 20, 20))); // dark gray fill
         painter->drawRect(m_rect);
         fillColor = m_hovered ? QColor(0, 180, 255)   // bright cyan when hovered
                               : QColor(20, 20, 20);   // dark gray when idle
     } else {
         // draw circle for output
-        // QPen outputPen(QColor(255, 100, 0)); // orange outline
         dynamicPen.setColor(QColor(255, 100, 0));
         dynamicPen.setWidth(m_hovered ? 3 : 2);
-        // painter->setPen(outputPen);
 
         painter->setBrush(QBrush(QColor(30, 20, 30))); // darker fill
         painter->drawEllipse(m_rect);
