@@ -117,6 +117,7 @@ void Wire::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
         painter->setPen(glowPen);
         painter->drawPath(m_path);
     }
+
 }
 
 QVariant Wire::itemChange(GraphicsItemChange change, const QVariant &value)

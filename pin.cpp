@@ -198,4 +198,7 @@ void Pin::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
         painter->drawRect(m_rect);   // square for input
     else
         painter->drawEllipse(m_rect); // circle for output
+
+
+
 }
